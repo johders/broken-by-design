@@ -1,3 +1,4 @@
+using BrokenByDesign.Api.Persistence.Database;
 using BrokenByDesign.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,5 +9,6 @@ var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 {
     app.MapControllers();
+    DbInitializer.Initialize(app.Configuration["Database:ConnectionStrings:DefaultConnection"]!);
 }
 app.Run();
