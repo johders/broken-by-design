@@ -1,3 +1,7 @@
+namespace BrokenByDesign.Api.DTOs.Events;
+
+using BrokenByDesign.Api.Domain;
+
 public record EventResponse(
     Guid Id,
     string Title,

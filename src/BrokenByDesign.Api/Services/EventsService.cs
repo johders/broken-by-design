@@ -1,3 +1,6 @@
+namespace BrokenByDesign.Api.Services;
+
+using BrokenByDesign.Api.Domain;
 using Microsoft.AspNetCore.Components.Web;
 
 public class EventsService

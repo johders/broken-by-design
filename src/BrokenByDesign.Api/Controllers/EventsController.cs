@@ -1,3 +1,7 @@
+namespace BrokenByDesign.Api.Controllers;
+
+using BrokenByDesign.Api.DTOs.Events;
+using BrokenByDesign.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]

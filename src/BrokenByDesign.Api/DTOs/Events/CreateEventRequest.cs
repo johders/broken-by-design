@@ -1,11 +1,14 @@
+namespace BrokenByDesign.Api.DTOs.Events;
+
+using BrokenByDesign.Api.Domain;
+
 public record CreateEventRequest(
         string Title,
         string Description,
         string Location,
         DateTime StartTime,
         DateTime EndTime,
-        Guid CreatedByUserId,
-        DateTime CreatedOn)
+        Guid CreatedByUserId)
 {
     public Event ToDomain()
     {
@@ -16,8 +19,7 @@ public record CreateEventRequest(
             Location = Location,
             StartTime = StartTime,
             EndTime = EndTime,
-            CreatedByUserId = CreatedByUserId,
-            CreatedOn = CreatedOn
+            CreatedByUserId = CreatedByUserId
         };
     }
 }
