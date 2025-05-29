@@ -1,14 +1,17 @@
-using BrokenByDesign.Api.Persistence.Database;
-using BrokenByDesign.Api.Services;
+using BrokenByDesign.Api.DependencyInjection;
+using BrokenByDesign.Api.RequestPipeline;
 
 var builder = WebApplication.CreateBuilder(args);
 {
-    builder.Services.AddScoped<EventsService>();
-    builder.Services.AddControllers();
+    builder.Services
+        .AddServices()
+        .AddControllers();
 }
+
 var app = builder.Build();
 {
     app.MapControllers();
-    DbInitializer.Initialize(app.Configuration["Database:ConnectionStrings:DefaultConnection"]!);
+    app.InitializeDatabase();
 }
+
 app.Run();
