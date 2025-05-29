@@ -1,17 +1,18 @@
+using BrokenByDesign.Api.Domain;
+using BrokenByDesign.Api.Persistence.Repositories;
+
 namespace BrokenByDesign.Api.Services;
 
-using BrokenByDesign.Api.Domain;
-using Microsoft.AspNetCore.Components.Web;
-
-public class EventsService
+public class EventsService(EventsRepository eventsRepository)
 {
-    private static readonly List<Event> EventsRepostitory = [];
-    public void Create(Event @event)
+    private readonly EventsRepository _eventsRepository = eventsRepository;
+    public async Task CreateAsync(Event @event)
     {
-        EventsRepostitory.Add(@event);
+        await _eventsRepository.CreateAsync(@event);
     }
-    
-    public Event? Get(Guid eventId) {
-        return EventsRepostitory.Find(e => e.Id == eventId);
+
+    public async Task<Event?> GetByIdAsync(Guid eventId)
+    {
+        return await _eventsRepository.GetByIdAsync(eventId);
     }
 }

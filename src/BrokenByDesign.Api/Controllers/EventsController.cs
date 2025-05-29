@@ -1,8 +1,8 @@
-namespace BrokenByDesign.Api.Controllers;
-
 using BrokenByDesign.Api.DTOs.Events;
 using BrokenByDesign.Api.Services;
 using Microsoft.AspNetCore.Mvc;
+
+namespace BrokenByDesign.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
@@ -11,11 +11,11 @@ public class EventsController(EventsService eventsService) : ControllerBase
     private readonly EventsService _eventsService = eventsService;
 
     [HttpPost]
-    public IActionResult Create(CreateEventRequest request)
+    public async Task<IActionResult> Create(CreateEventRequest request)
     {
         var @event = request.ToDomain();
 
-        _eventsService.Create(@event);
+        await _eventsService.CreateAsync(@event);
 
         return CreatedAtAction(
             actionName: nameof(Get),
@@ -24,11 +24,11 @@ public class EventsController(EventsService eventsService) : ControllerBase
     }
 
     [HttpGet("{eventId:guid}")]
-    public IActionResult Get(Guid eventId)
+    public async Task<IActionResult> Get(Guid eventId)
     {
-        var @event = _eventsService.Get(eventId);
+        var @event = await _eventsService.GetByIdAsync(eventId);
         return @event is null
         ? Problem(statusCode: StatusCodes.Status404NotFound, detail: $"Event not found (eventId: {eventId})")
         : Ok(EventResponse.FromDomain(@event));
-    }   
+    }
 }
