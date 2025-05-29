@@ -1,4 +1,3 @@
-using BrokenByDesign.Api.Persistence;
 using BrokenByDesign.Api.Persistence.Database;
 using BrokenByDesign.Api.Persistence.Repositories;
 using BrokenByDesign.Api.Services;
@@ -27,9 +26,9 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddPersistence(this IServiceCollection services, string connectionString)
     {
-        services.AddScoped<IDbConnectionFactory>(_ => new NpgsqlConnectionFactory(configuration[DbConstants.DefaultConnectionStringPath]!));
+        services.AddScoped<IDbConnectionFactory>(_ => new NpgsqlConnectionFactory(connectionString!));
         services.AddScoped<EventsRepository>();
 
         return services;

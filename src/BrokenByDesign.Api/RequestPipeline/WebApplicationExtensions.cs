@@ -1,5 +1,4 @@
 using BrokenByDesign.Api.Errors;
-using BrokenByDesign.Api.Persistence;
 using BrokenByDesign.Api.Persistence.Database;
 using Microsoft.AspNetCore.Diagnostics;
 
@@ -7,9 +6,10 @@ namespace BrokenByDesign.Api.RequestPipeline;
 
 public static class WebApplicationExtensions
 {
-    public static WebApplication InitializeDatabase(this WebApplication app)
+    public static WebApplication InitializeDatabase(this WebApplication app, string connectionString)
     {
-        DbInitializer.Initialize(app.Configuration[DbConstants.DefaultConnectionStringPath]!);
+        DbInitializer.Initialize(connectionString!);
+
         return app;
     }  
 

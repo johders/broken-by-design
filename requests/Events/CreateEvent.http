@@ -1,6 +1,6 @@
 # @name create
 
-POST {{host}}/events
+POST {{hostDev}}/events
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
