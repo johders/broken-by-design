@@ -15,10 +15,10 @@ public class EventsRepository(IDbConnectionFactory dbConnectionFactory)
         using IDbConnection connection = await _dbConnectionFactory.CreateConnectionAsync();
 
         string query = @"
-            INSERT INTO events(id, title, description, location, start_time, end_time, created_by_user_id, created_on)
-            VALUES (@Id, @Title, @Description, @Location, @StartTime, @EndTime, @CreatedByUserId, @CreatedOn)";
+            INSERT INTO events(id, group_id, title, description, location, start_time, end_time, created_by_user_id, created_on)
+            VALUES (@Id, @GroupId, @Title, @Description, @Location, @StartTime, @EndTime, @CreatedByUserId, @CreatedOn)";
 
-        var result = await connection.ExecuteAsync(query, @event);
+        var result =  await connection.ExecuteAsync(query, @event);
 
         result.Throw().IfNegativeOrZero();
     }

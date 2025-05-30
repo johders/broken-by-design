@@ -5,13 +5,13 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
+    "GroupId": "00000000-0000-0000-0000-000000000101",
     "Title": "Spring Tech Conference 2025",
     "Description": "An annual conference focusing on the latest trends in technology and software development.",
     "Location": "San Francisco, CA",
-    "StartTime": "2025-06-15T09:00:00",
-    "EndTime": "2025-06-15T17:00:00",
-    "CreatedByUserId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    "CreatedAt": "2025-04-20T14:30:00"
+    "StartTime": "2025-06-15T07:00:00Z",
+    "EndTime": "2025-06-15T15:00:00Z", 
+    "CreatedByUserId": "00000000-0000-0000-0000-000000000001"
 }
 
 ###
