@@ -1,6 +1,6 @@
 
 using System.Data;
-using BrokenByDesign.Api.Domain;
+using BrokenByDesign.Api.Domain.Entities;
 using BrokenByDesign.Api.Persistence.Database;
 using Dapper;
 using Throw;

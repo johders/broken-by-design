@@ -1,20 +1,22 @@
 namespace BrokenByDesign.Api.DTOs.Events;
 
-using BrokenByDesign.Api.Domain;
+using BrokenByDesign.Api.Domain.Entities;
 
 public record EventResponse(
     Guid Id,
+    Guid GroupId,
     string Title,
     string Description,
     string Location,
-    DateTime StartTime,
-    DateTime EndTime,
+    DateTimeOffset StartTime,
+    DateTimeOffset EndTime,
     Guid CreatedByUserId,
-    DateTime CreatedOn)
+    DateTimeOffset CreatedOn)
 {
     public static EventResponse FromDomain(Event @event)
     {
         return new EventResponse(
+            @event.GroupId,
             @event.Id,
             @event.Title,
             @event.Description,

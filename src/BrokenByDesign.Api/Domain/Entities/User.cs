@@ -1,10 +1,12 @@
-namespace BrokenByDesign.Api.Domain;
+using BrokenByDesign.Api.Domain.Common;
 
-public class User
+namespace BrokenByDesign.Api.Domain.Entities;
+
+public class User : TrackableEntity
 {
     public Guid Id { get; init; } = Guid.NewGuid();
     public required string Username { get; init; }
     public required string Email { get; init; }
     public required string PasswordHash { get; init; }
-    public DateTime CreatedOn { get; init; } = DateTime.UtcNow;
+    public DateTimeOffset CreatedOn { get; init; } = DateTimeOffset.UtcNow;
 }

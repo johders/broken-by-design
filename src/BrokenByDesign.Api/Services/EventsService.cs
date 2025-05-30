@@ -1,5 +1,5 @@
-using BrokenByDesign.Api.Domain;
 using BrokenByDesign.Api.Errors;
+using BrokenByDesign.Api.Domain.Entities;
 using BrokenByDesign.Api.Persistence.Repositories;
 
 namespace BrokenByDesign.Api.Services;
