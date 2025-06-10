@@ -404,3 +404,16 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Docker related
+.dockerignore
+docker-compose*.override.yml
+docker-compose*.yml.override
+docker-compose.override.yml
+docker-compose.yml.override.*
+
+# Docker image archives
+*.tar
+
+# Environment variable files
+.env
