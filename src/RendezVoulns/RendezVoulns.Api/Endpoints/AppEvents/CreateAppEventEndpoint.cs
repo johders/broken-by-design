@@ -11,14 +11,14 @@ public static class CreateAppEventEndpoint
     public static IEndpointRouteBuilder MapCreateAppEvent(this IEndpointRouteBuilder app)
     {
         app.MapPost(ApiEndpoints.AppEvents.Create, async (CreateAppEventRequest request, IAppEventRepository repository) =>
-        {
-            var appEvent = request.MapToAppEvent();
-            await repository.CreateAsync(appEvent);
+            {
+                var appEvent = request.MapToAppEvent();
+                await repository.CreateAsync(appEvent);
 
-            var response = appEvent.MapToResponse();
-            return TypedResults.Ok(response);
-        })
-        .WithName(Name);
+                var response = appEvent.MapToResponse();
+                return TypedResults.Ok(response);
+            })
+            .WithName(Name);
         return app;
     }
 }

@@ -1,0 +1,11 @@
+PUT http://localhost:5006/api/events/c4c0e528-a320-4278-9c7b-6facabf9248e
+Content-Type: application/json
+
+{
+    "groupId": "00000000-0000-0000-0000-000000000101",
+    "title": "Spring Tech Conference 2021",
+    "description": "An annual conference focusing on the latest trends in technology and software development.",
+    "location": "Barcelona, Spain",
+    "startTime": "2025-08-19T07:00:00Z",
+    "endTime": "2025-08-12T15:00:00Z" 
+}

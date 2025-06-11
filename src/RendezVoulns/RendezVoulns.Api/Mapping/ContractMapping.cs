@@ -22,6 +22,21 @@ public static class ContractMapping
         };
     }
 
+    public static AppEvent MapToAppEvent(this UpdateAppEventRequest request, Guid id)
+    {
+        return new AppEvent
+        {
+            Id = id,
+            GroupId = request.GroupId,
+            Title = request.Title,
+            Description = request.Description,
+            Location = request.Location,
+            StartTime = request.StartTime,
+            EndTime = request.EndTime,
+            CreatedByUserId = Guid.Parse("00000000-0000-0000-0000-000000000001")
+        };
+    }
+
     public static AppEventResponse MapToResponse(this AppEvent appEvent)
     {
         return new AppEventResponse
