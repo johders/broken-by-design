@@ -1,0 +1,12 @@
+POST http://localhost:5006/api/events
+Content-Type: application/json
+
+{
+    "groupId": "00000000-0000-0000-0000-000000000101",
+    "title": "Spring Tech Conference 2025",
+    "description": "An annual conference focusing on the latest trends in technology and software development.",
+    "location": "San Francisco, CA",
+    "startTime": "2025-06-15T07:00:00Z",
+    "endTime": "2025-06-15T15:00:00Z", 
+    "createdByUserId": "00000000-0000-0000-0000-000000000001"
+}
