@@ -7,6 +7,7 @@ public static class AppEventEndpointExtensions
         app.MapCreateAppEvent();
         app.MapGetAppEvent();
         app.MapUpdateAppEvent();
+        app.MapDeleteAppEvent();
         return app;        
     }
 }
