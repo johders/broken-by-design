@@ -1,4 +1,4 @@
-namespace RendezVoulns.Domain.Entities;
+namespace RendezVoulns.Application.Entities;
 
 public class AppEvent
 {
