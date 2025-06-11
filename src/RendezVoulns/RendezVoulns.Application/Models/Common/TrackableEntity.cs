@@ -1,4 +1,4 @@
-namespace RendezVoulns.Application.Common;
+namespace RendezVoulns.Application.Models.Common;
 
 public abstract class TrackableEntity
 {
