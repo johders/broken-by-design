@@ -16,7 +16,7 @@ public static class CreateAppEventEndpoint
                 await repository.CreateAsync(appEvent);
 
                 var response = appEvent.MapToResponse();
-                return TypedResults.Ok(response);
+                return TypedResults.CreatedAtRoute(response, GetAppEventEndpoint.Name, new {idOrSlug = appEvent.Id});
             })
             .WithName(Name);
         return app;

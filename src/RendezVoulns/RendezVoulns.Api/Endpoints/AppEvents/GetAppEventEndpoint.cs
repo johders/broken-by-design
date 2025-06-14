@@ -9,9 +9,11 @@ public static class GetAppEventEndpoint
 
     public static IEndpointRouteBuilder MapGetAppEvent(this IEndpointRouteBuilder app)
     {
-        app.MapGet(ApiEndpoints.AppEvents.Get, async (Guid id, IAppEventRepository repository) =>
+        app.MapGet(ApiEndpoints.AppEvents.Get, async (string idOrSlug, IAppEventRepository repository) =>
             {
-                var appEvent = await repository.GetByIdAsync(id);
+                var appEvent = Guid.TryParse(idOrSlug, out var id)
+                    ? await repository.GetByIdAsync(id)
+                    : await repository.GetBySlugAsync(idOrSlug);
 
                 if (appEvent is null)
                     return Results.NotFound();

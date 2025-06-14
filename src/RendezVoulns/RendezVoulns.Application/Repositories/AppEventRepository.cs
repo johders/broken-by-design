@@ -18,6 +18,12 @@ public class AppEventRepository : IAppEventRepository
         return Task.FromResult(appEvent);
     }
 
+    public Task<AppEvent?> GetBySlugAsync(string slug)
+    {
+        var appEvent = _appEvents.SingleOrDefault(e => e.Slug == slug);
+        return Task.FromResult(appEvent);
+    }
+
     public Task<IEnumerable<AppEvent>> GetAllAsync()
     {
         return Task.FromResult(_appEvents.AsEnumerable());

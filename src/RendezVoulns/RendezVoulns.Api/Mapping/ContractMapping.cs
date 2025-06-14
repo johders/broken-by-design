@@ -44,6 +44,7 @@ public static class ContractMapping
             Id = appEvent.Id,
             GroupId = appEvent.GroupId,
             Title = appEvent.Title,
+            Slug = appEvent.Slug,
             Description = appEvent.Description,
             Location = appEvent.Location,
             StartTime = appEvent.StartTime,
