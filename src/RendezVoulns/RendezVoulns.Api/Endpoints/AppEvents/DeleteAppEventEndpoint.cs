@@ -8,14 +8,16 @@ public static class DeleteAppEventEndpoint
 
     public static IEndpointRouteBuilder MapDeleteAppEvent(this IEndpointRouteBuilder app)
     {
-        app.MapDelete(ApiEndpoints.AppEvents.Delete, async (Guid id, IAppEventRepository repository) =>
+        app.MapDelete(ApiEndpoints.AppEvents.Delete, async (
+            Guid id, IAppEventRepository repository,
+            CancellationToken token) =>
             {
-                var appEvent = await repository.GetByIdAsync(id);
+                var appEvent = await repository.GetByIdAsync(id, token);
 
                 if (appEvent is null)
                     return Results.NotFound();
 
-                bool deleted = await repository.DeleteByIdAsync(id);
+                bool deleted = await repository.SoftDeleteAsync(id, DateTimeOffset.UtcNow, token);
 
                 return deleted
                 ? TypedResults.Ok()

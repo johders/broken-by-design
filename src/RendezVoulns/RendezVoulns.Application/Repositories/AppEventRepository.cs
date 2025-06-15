@@ -19,13 +19,13 @@ public class AppEventRepository(IDbConnectionFactory dbConnectionFactory) : IApp
         using var connection = await _dbConnectionFactory.CreateConnectionAsync();
         using var transaction = connection.BeginTransaction();
 
+        var sql = """
+            INSERT INTO events (id, group_id, title, slug, description, location, start_time, end_time, created_by_user_id, created_on)
+            VALUES (@Id, @GroupId, @Title, @Slug, @Description, @Location, @StartTime, @EndTime, @CreatedByUserId, @CreatedOn)
+            """;
+
         try
         {
-            var sql = """
-                INSERT INTO events (id, group_id, title, slug, description, location, start_time, end_time, created_by_user_id, created_on)
-                VALUES (@Id, @GroupId, @Title, @Slug, @Description, @Location, @StartTime, @EndTime, @CreatedByUserId, @CreatedOn)
-                """;
-
             var result = await connection.ExecuteAsync(new CommandDefinition(sql, appEvent, transaction, cancellationToken: token));
 
             transaction.Commit();
@@ -102,14 +102,14 @@ public class AppEventRepository(IDbConnectionFactory dbConnectionFactory) : IApp
         using var connection = await _dbConnectionFactory.CreateConnectionAsync();
         using var transaction = connection.BeginTransaction();
 
+        var sql = """
+            UPDATE events SET group_id = @GroupId, title = @Title, slug = @Slug, description = @Description, location = @Location, 
+            start_time = @StartTime, end_time = @EndTime, created_by_user_id = @CreatedByUserId, created_on = @CreatedOn, updated_on = @UpdatedOn
+            WHERE id = @Id;
+            """;
+
         try
         {
-            var sql = """
-                UPDATE events SET group_id = @GroupId, title = @Title, slug = @Slug, description = @Description, location = @Location, 
-                start_time = @StartTime, end_time = @EndTime, created_by_user_id = @CreatedByUserId, created_on = @CreatedOn, updated_on = @UpdatedOn
-                WHERE id = @Id;
-                """;
-
             var result = await connection.ExecuteAsync(new CommandDefinition(sql, appEvent, transaction, cancellationToken: token));
 
             transaction.Commit();
@@ -125,12 +125,21 @@ public class AppEventRepository(IDbConnectionFactory dbConnectionFactory) : IApp
         }
     }
 
-    public Task<bool> DeleteByIdAsync(Guid id)
+    public async Task<bool> SoftDeleteAsync(Guid id, DateTimeOffset deletedOn, CancellationToken token)
     {
-        var removedCount = _appEvents.RemoveAll(e => e.Id == id);
-        var appEventRemoved = removedCount > 0;
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+        using var transaction = connection.BeginTransaction();
 
-        return Task.FromResult(appEventRemoved);
+        var sql = """
+            UPDATE events SET updated_on = @UpdatedOn, deleted_on = @DeletedOn
+            WHERE id = @Id
+            AND deleted_on IS NULL;
+            """;
+
+        var result = await connection.ExecuteAsync(new CommandDefinition(sql, new {Id = id, DeletedOn = deletedOn, UpdatedOn = deletedOn}, transaction, cancellationToken: token));
+
+        transaction.Commit();
+        return result > 0;
     }
 
     public Task<bool> ExistsByIdAsync(Guid id)
