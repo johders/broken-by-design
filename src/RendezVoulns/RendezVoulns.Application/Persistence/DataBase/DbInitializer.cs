@@ -11,7 +11,8 @@ public static class DbInitializer
 
         var upgrader = DeployChanges.To
             .PostgresqlDatabase(connectionString)
-            .WithScriptsAndCodeEmbeddedInAssembly(Assembly.GetExecutingAssembly())
+            .WithScriptsAndCodeEmbeddedInAssembly(Assembly.GetExecutingAssembly(),
+                s => !s.Contains("CreateSlugIndex"))
             .WithTransaction()
             .LogToConsole()
             .Build();
@@ -19,8 +20,20 @@ public static class DbInitializer
         var result = upgrader.PerformUpgrade();
 
         if (!result.Successful)
-        {
             throw new InvalidOperationException("Failed database migration");
-        }
+
+        var nonTransactional = DeployChanges.To
+            .PostgresqlDatabase(connectionString)
+            .WithScriptsAndCodeEmbeddedInAssembly(Assembly.GetExecutingAssembly(),
+                s => s.Contains("CreateSlugIndex"))
+            .WithoutTransaction()
+            .LogToConsole()
+            .Build();
+
+        var nonTransactionalResult = nonTransactional.PerformUpgrade();
+
+        if (!nonTransactionalResult.Successful)
+            throw new InvalidOperationException("Failed database migration");
+        
     }
 }
