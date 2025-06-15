@@ -7,7 +7,7 @@ public interface IAppEventRepository
     Task<bool> CreateAsync(AppEvent appEvent, CancellationToken token = default);
     Task<AppEvent?> GetByIdAsync(Guid id, CancellationToken token = default);
     Task<AppEvent?> GetBySlugAsync(string slug, CancellationToken token = default);
-    Task<IEnumerable<AppEvent>> GetAllAsync();
+    Task<IEnumerable<AppEvent>> GetAllAsync(CancellationToken token = default);
     Task<bool> UpdateAsync(AppEvent appEvent);
     Task<bool> DeleteByIdAsync(Guid id);
     Task<bool> ExistsByIdAsync(Guid id);

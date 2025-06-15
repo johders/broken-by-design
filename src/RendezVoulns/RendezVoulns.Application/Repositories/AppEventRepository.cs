@@ -46,7 +46,7 @@ public class AppEventRepository(IDbConnectionFactory dbConnectionFactory) : IApp
         using var connection = await _dbConnectionFactory.CreateConnectionAsync();
 
         var sql = """
-                SELECT id, group_id AS GroupId, title, slug, description, location, start_time AS StartTime, end_time AS EndTime, created_by_user_id AS CreatedByUserId, created_on AS CreatedOn from events
+                SELECT id, group_id AS GroupId, title, slug, description, location, start_time AS StartTime, end_time AS EndTime, created_by_user_id AS CreatedByUserId, created_on AS CreatedOn FROM events
                 WHERE id = @Id
                 AND deleted_on IS NULL;
                 """;
@@ -61,7 +61,7 @@ public class AppEventRepository(IDbConnectionFactory dbConnectionFactory) : IApp
         using var connection = await _dbConnectionFactory.CreateConnectionAsync();
 
         var sql = """
-                SELECT id, group_id AS GroupId, title, slug, description, location, start_time AS StartTime, end_time AS EndTime, created_by_user_id AS CreatedByUserId, created_on AS CreatedOn from events
+                SELECT id, group_id AS GroupId, title, slug, description, location, start_time AS StartTime, end_time AS EndTime, created_by_user_id AS CreatedByUserId, created_on AS CreatedOn FROM events
                 WHERE slug = @Slug
                 AND deleted_on IS NULL;
                 """;
@@ -71,9 +71,29 @@ public class AppEventRepository(IDbConnectionFactory dbConnectionFactory) : IApp
         return appEvent;
     }
 
-    public Task<IEnumerable<AppEvent>> GetAllAsync()
+    public async Task<IEnumerable<AppEvent>> GetAllAsync(CancellationToken token)
     {
-        return Task.FromResult(_appEvents.AsEnumerable());
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+
+        var sql = """
+                SELECT id, group_id AS GroupId, title, slug, description, location, start_time AS StartTime, end_time AS EndTime, created_by_user_id AS CreatedByUserId, created_on AS CreatedOn FROM events
+                WHERE deleted_on IS NULL;
+                """;
+
+        var result = await connection.QueryAsync(new CommandDefinition(sql, cancellationToken: token));
+
+        return result.Select(e => new AppEvent
+        {
+            Id = e.id,
+            GroupId = e.groupid,
+            Title = e.title,
+            Description = e.description,
+            Location = e.location,
+            StartTime = e.starttime,
+            EndTime = e.endtime,
+            CreatedByUserId = e.createdbyuserid,
+            CreatedOn = e.createdon
+        });
     }
 
 

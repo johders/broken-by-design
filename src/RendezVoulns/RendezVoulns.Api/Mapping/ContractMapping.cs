@@ -1,6 +1,4 @@
-using Microsoft.AspNetCore.CookiePolicy;
 using RendezVoulns.Application.Models.Entities;
-using RendezVoulns.Application.Repositories;
 using RendezVoulns.Contracts.V1.Requests;
 using RendezVoulns.Contracts.V1.Responses;
 
@@ -51,6 +49,14 @@ public static class ContractMapping
             EndTime = appEvent.EndTime,
             CreatedByUserId = appEvent.CreatedByUserId,
             CreatedOn = appEvent.CreatedOn
+        };
+    }
+
+    public static AppEventsResponse MapToResponse(this IEnumerable<AppEvent> appEvents)
+    {
+        return new AppEventsResponse
+        {
+            Items = appEvents.Select(e => e.MapToResponse())
         };
     }
 }
