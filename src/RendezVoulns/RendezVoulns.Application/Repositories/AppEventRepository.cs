@@ -97,17 +97,32 @@ public class AppEventRepository(IDbConnectionFactory dbConnectionFactory) : IApp
     }
 
 
-    public Task<bool> UpdateAsync(AppEvent appEvent)
+    public async Task<bool> UpdateAsync(AppEvent appEvent, CancellationToken token)
     {
-        var appEventIndex = _appEvents.FindIndex(e => e.Id == appEvent.Id);
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+        using var transaction = connection.BeginTransaction();
 
-        if (appEventIndex == -1)
+        try
         {
-            return Task.FromResult(false);
-        }
+            var sql = """
+                UPDATE events SET group_id = @GroupId, title = @Title, slug = @Slug, description = @Description, location = @Location, 
+                start_time = @StartTime, end_time = @EndTime, created_by_user_id = @CreatedByUserId, created_on = @CreatedOn, updated_on = @UpdatedOn
+                WHERE id = @Id;
+                """;
 
-        _appEvents[appEventIndex] = appEvent;
-        return Task.FromResult(true);
+            var result = await connection.ExecuteAsync(new CommandDefinition(sql, appEvent, transaction, cancellationToken: token));
+
+            transaction.Commit();
+            return result > 0;
+        }
+        catch (PostgresException ex) when (ex.SqlState == UniqueViolationErrorCode)
+        {
+            throw new DuplicateSlugException("An event with this slug already exists");
+        }
+        catch (PostgresException ex) when (ex.SqlState == ForeignKeyViolationErrorCode)
+        {
+            throw new ForeignKeyViolationException("Invalid group/user reference");
+        }
     }
 
     public Task<bool> DeleteByIdAsync(Guid id)

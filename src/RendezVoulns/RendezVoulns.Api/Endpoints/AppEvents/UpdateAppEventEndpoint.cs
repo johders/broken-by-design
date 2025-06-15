@@ -10,20 +10,22 @@ public static class UpdateAppEventEndpoint
 
     public static IEndpointRouteBuilder MapUpdateAppEvent(this IEndpointRouteBuilder app)
     {
-        app.MapPut(ApiEndpoints.AppEvents.Update, async (Guid id, UpdateAppEventRequest request, IAppEventRepository repository) =>
-            {
-                var appEvent = await repository.GetByIdAsync(id);
+        app.MapPut(ApiEndpoints.AppEvents.Update, async (
+            Guid id, UpdateAppEventRequest request,
+            IAppEventRepository repository, CancellationToken token) =>
+                {
+                    var appEvent = await repository.GetByIdAsync(id, token);
 
-                if (appEvent is null)
-                    return Results.NotFound();
+                    if (appEvent is null)
+                        return Results.NotFound();
 
-                var updatedEvent = request.MapToAppEvent(id);
-                await repository.UpdateAsync(updatedEvent);
+                    var updatedEvent = request.MapToAppEvent(id);
+                    await repository.UpdateAsync(updatedEvent, token);
 
-                var response = updatedEvent.MapToResponse();
-                return TypedResults.Ok(response);
-            })
-            .WithName(Name);
+                    var response = updatedEvent.MapToResponse();
+                    return TypedResults.Ok(response);
+                })
+                .WithName(Name);
         return app;
     }
 }
