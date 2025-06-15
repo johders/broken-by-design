@@ -1,10 +1,11 @@
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+using RendezVoulns.Application.Models.Common;
 
 namespace RendezVoulns.Application.Models.Entities;
 
-public partial class AppEvent
+public partial class AppEvent : TrackableEntity
 {
     public Guid Id { get; init; } = Guid.NewGuid();
     public required Guid GroupId { get; init; }

@@ -4,10 +4,11 @@ namespace RendezVoulns.Application.Repositories.Interfaces;
 
 public interface IAppEventRepository
 {
-    Task<bool> CreateAsync(AppEvent appEvent);
-    Task<AppEvent?> GetByIdAsync(Guid id);
-    Task<AppEvent?> GetBySlugAsync(string slug);
+    Task<bool> CreateAsync(AppEvent appEvent, CancellationToken token = default);
+    Task<AppEvent?> GetByIdAsync(Guid id, CancellationToken token = default);
+    Task<AppEvent?> GetBySlugAsync(string slug, CancellationToken token = default);
     Task<IEnumerable<AppEvent>> GetAllAsync();
     Task<bool> UpdateAsync(AppEvent appEvent);
     Task<bool> DeleteByIdAsync(Guid id);
+    Task<bool> ExistsByIdAsync(Guid id);
 }

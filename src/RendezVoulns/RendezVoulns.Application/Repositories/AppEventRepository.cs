@@ -1,27 +1,74 @@
+using Dapper;
+using Npgsql;
+using RendezVoulns.Application.Errors.Postgresql;
 using RendezVoulns.Application.Models.Entities;
+using RendezVoulns.Application.Persistence.Database;
 using RendezVoulns.Application.Repositories.Interfaces;
 
 namespace RendezVoulns.Application.Repositories;
 
-public class AppEventRepository : IAppEventRepository
+public class AppEventRepository(IDbConnectionFactory dbConnectionFactory) : IAppEventRepository
 {
+    private readonly IDbConnectionFactory _dbConnectionFactory = dbConnectionFactory;
+    private const string UniqueViolationErrorCode = "23505";
+    private const string ForeignKeyViolationErrorCode = "23503";
+
     private readonly List<AppEvent> _appEvents = [];
-    public Task<bool> CreateAsync(AppEvent appEvent)
+    public async Task<bool> CreateAsync(AppEvent appEvent, CancellationToken token)
     {
-        _appEvents.Add(appEvent);
-        return Task.FromResult(true);
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+        using var transaction = connection.BeginTransaction();
+
+        try
+        {
+            var sql = """
+                INSERT INTO events (id, group_id, title, slug, description, location, start_time, end_time, created_by_user_id, created_on)
+                VALUES (@Id, @GroupId, @Title, @Slug, @Description, @Location, @StartTime, @EndTime, @CreatedByUserId, @CreatedOn)
+                """;
+
+            var result = await connection.ExecuteAsync(new CommandDefinition(sql, appEvent, transaction, cancellationToken: token));
+
+            transaction.Commit();
+            return result > 0;
+        }
+        catch (PostgresException ex) when (ex.SqlState == UniqueViolationErrorCode)
+        {
+            throw new DuplicateSlugException("An event with this slug already exists");
+        }
+        catch (PostgresException ex) when (ex.SqlState == ForeignKeyViolationErrorCode)
+        {
+            throw new ForeignKeyViolationException("Invalid group/user reference");
+        }
     }
 
-    public Task<AppEvent?> GetByIdAsync(Guid id)
+    public async Task<AppEvent?> GetByIdAsync(Guid id, CancellationToken token)
     {
-        var appEvent = _appEvents.SingleOrDefault(e => e.Id == id);
-        return Task.FromResult(appEvent);
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+
+        var sql = """
+                SELECT id, group_id AS GroupId, title, slug, description, location, start_time AS StartTime, end_time AS EndTime, created_by_user_id AS CreatedByUserId, created_on AS CreatedOn from events
+                WHERE id = @Id
+                AND deleted_on IS NULL;
+                """;
+
+        var appEvent = await connection.QueryFirstOrDefaultAsync<AppEvent>(new CommandDefinition(sql, new { Id = id }, cancellationToken: token));
+
+        return appEvent;
     }
 
-    public Task<AppEvent?> GetBySlugAsync(string slug)
+    public async Task<AppEvent?> GetBySlugAsync(string slug, CancellationToken token)
     {
-        var appEvent = _appEvents.SingleOrDefault(e => e.Slug == slug);
-        return Task.FromResult(appEvent);
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+
+        var sql = """
+                SELECT id, group_id AS GroupId, title, slug, description, location, start_time AS StartTime, end_time AS EndTime, created_by_user_id AS CreatedByUserId, created_on AS CreatedOn from events
+                WHERE slug = @Slug
+                AND deleted_on IS NULL;
+                """;
+
+        var appEvent = await connection.QueryFirstOrDefaultAsync<AppEvent>(new CommandDefinition(sql, new { Slug = slug }, cancellationToken: token));
+
+        return appEvent;
     }
 
     public Task<IEnumerable<AppEvent>> GetAllAsync()
@@ -49,5 +96,10 @@ public class AppEventRepository : IAppEventRepository
         var appEventRemoved = removedCount > 0;
 
         return Task.FromResult(appEventRemoved);
+    }
+
+    public Task<bool> ExistsByIdAsync(Guid id)
+    {
+        throw new NotImplementedException();
     }
 }

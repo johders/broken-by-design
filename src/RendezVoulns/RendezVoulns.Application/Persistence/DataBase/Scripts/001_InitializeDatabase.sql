@@ -38,7 +38,7 @@ CREATE TABLE
         id UUID PRIMARY KEY NOT NULL,
         group_id UUID NOT NULL,
         title TEXT NOT NULL,
-        slug TEXT NOT NULL,
+        slug TEXT NOT NULL UNIQUE,
         description TEXT NOT NULL,
         location TEXT NOT NULL,
         start_time TIMESTAMPTZ NOT NULL,
