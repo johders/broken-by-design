@@ -3,9 +3,9 @@ Content-Type: application/json
 
 {
     "groupId": "00000000-0000-0000-0000-000000000101",
-    "title": "Cool tech stuff",
+    "title": "Cooler tech stuff",
     "description": "An annual conference focusing on the latest trends in technology and software development.",
-    "location": "San Francisco, CA",
+    "location": "De Haan, Belgium",
     "startTime": "2025-06-15T07:00:00Z",
     "endTime": "2025-06-15T15:00:00Z"
 }

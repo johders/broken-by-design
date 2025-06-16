@@ -10,6 +10,7 @@ public static class ApplicationServiceCollectionExtensions
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddSingleton<IAppEventRepository, AppEventRepository>();
+        services.AddSingleton<ITagRepository, TagRepository>();
         return services;
     }
 

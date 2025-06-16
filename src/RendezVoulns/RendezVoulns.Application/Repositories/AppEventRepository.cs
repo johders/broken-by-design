@@ -10,9 +10,6 @@ namespace RendezVoulns.Application.Repositories;
 public class AppEventRepository(IDbConnectionFactory dbConnectionFactory) : IAppEventRepository
 {
     private readonly IDbConnectionFactory _dbConnectionFactory = dbConnectionFactory;
-    private const string UniqueViolationErrorCode = "23505";
-    private const string ForeignKeyViolationErrorCode = "23503";
-
     private readonly List<AppEvent> _appEvents = [];
     public async Task<bool> CreateAsync(AppEvent appEvent, CancellationToken token)
     {
@@ -31,11 +28,11 @@ public class AppEventRepository(IDbConnectionFactory dbConnectionFactory) : IApp
             transaction.Commit();
             return result > 0;
         }
-        catch (PostgresException ex) when (ex.SqlState == UniqueViolationErrorCode)
+        catch (PostgresException ex) when (ex.SqlState == Npgsql.PostgresErrorCodes.UniqueViolation)
         {
-            throw new DuplicateSlugException("An event with this slug already exists");
+            throw new DuplicateException("An event with this slug already exists");
         }
-        catch (PostgresException ex) when (ex.SqlState == ForeignKeyViolationErrorCode)
+        catch (PostgresException ex) when (ex.SqlState == Npgsql.PostgresErrorCodes.ForeignKeyViolation)
         {
             throw new ForeignKeyViolationException("Invalid group/user reference");
         }
@@ -115,11 +112,11 @@ public class AppEventRepository(IDbConnectionFactory dbConnectionFactory) : IApp
             transaction.Commit();
             return result > 0;
         }
-        catch (PostgresException ex) when (ex.SqlState == UniqueViolationErrorCode)
+        catch (PostgresException ex) when (ex.SqlState == Npgsql.PostgresErrorCodes.UniqueViolation)
         {
-            throw new DuplicateSlugException("An event with this slug already exists");
+            throw new DuplicateException("An event with this slug already exists");
         }
-        catch (PostgresException ex) when (ex.SqlState == ForeignKeyViolationErrorCode)
+        catch (PostgresException ex) when (ex.SqlState == Npgsql.PostgresErrorCodes.ForeignKeyViolation)
         {
             throw new ForeignKeyViolationException("Invalid group/user reference");
         }

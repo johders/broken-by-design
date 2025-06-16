@@ -1,0 +1,7 @@
+POST http://localhost:5006/api/tags
+Content-Type: application/json
+
+{
+    "name": "Other",
+    "colorHex": "#663399"
+}

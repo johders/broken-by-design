@@ -59,5 +59,25 @@ public static class ContractMapping
             Items = appEvents.Select(e => e.MapToResponse())
         };
     }
+
+    public static Tag MapToTag(this CreateTagRequest request)
+    {
+        return new Tag
+        {
+            Name = request.Name,
+            ColorHex = request.ColorHex
+        };
+    }
+
+        public static TagResponse MapToResponse(this Tag tag)
+    {
+        return new TagResponse
+        {
+            Id = tag.Id,
+            Name = tag.Name,
+            ColorHex = tag.ColorHex,
+            CreatedOn = tag.CreatedOn
+        };
+    }
 }
 

@@ -1,4 +1,4 @@
-PUT http://localhost:5006/api/events/23faec9e-4fad-4f09-a70f-ab31021a8ebf
+PUT http://localhost:5006/api/events/07bc575e-d8ce-4e09-a8de-10c3bb6ca3d9
 Content-Type: application/json
 
 {
