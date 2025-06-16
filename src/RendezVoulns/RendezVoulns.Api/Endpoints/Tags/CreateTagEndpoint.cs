@@ -17,7 +17,7 @@ public static class CreateTagEndpoint
                     await repository.CreateAsync(tag, token);
 
                     var response = tag.MapToResponse();
-                    return TypedResults.Ok(response);
+                    return TypedResults.CreatedAtRoute(response, GetTagEndpoint.Name, new { tag.Id });
                 })
                 .WithName(Name);
         return app;

@@ -33,25 +33,34 @@ public class TagRepository(IDbConnectionFactory dbConnectionFactory) : ITagRepos
         }
     }
 
-    public Task<bool> ExistsByIdAsync(Guid id)
+    public async Task<Tag?> GetByIdAsync(Guid id, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        using var connection = await _dbConnectionfactory.CreateConnectionAsync();
+
+        var sql = """
+        SELECT id, name, color_hex AS ColorHex, created_on AS CreateOn FROM tags
+        WHERE id = @Id
+        AND deleted_on IS NULL
+        """;
+        var tag = await connection.QueryFirstOrDefaultAsync<Tag>(new CommandDefinition(sql, new { Id = id }, cancellationToken: token));
+
+        return tag;
     }
 
-    public Task<IEnumerable<Tag>> GetAllAsync(CancellationToken token = default)
+    public async Task<IEnumerable<Tag>> GetAllAsync(CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        using var connection = await _dbConnectionfactory.CreateConnectionAsync();
+
+        var sql = """
+        SELECT id, name, color_hex AS ColorHex, created_on AS CreateOn FROM tags
+        WHERE deleted_on IS NULL
+        """;
+        var tags = await connection.QueryAsync<Tag>(new CommandDefinition(sql, cancellationToken: token));
+
+        return tags;
     }
 
-    public Task<Tag?> GetByIdAsync(Guid id, CancellationToken token = default)
-    {
-        throw new NotImplementedException();
-    }
 
-    public Task<Tag?> GetBySlugAsync(string slug, CancellationToken token = default)
-    {
-        throw new NotImplementedException();
-    }
 
     public Task<bool> SoftDeleteAsync(Guid id, DateTimeOffset deletedOn, CancellationToken token = default)
     {

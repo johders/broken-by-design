@@ -69,7 +69,7 @@ public static class ContractMapping
         };
     }
 
-        public static TagResponse MapToResponse(this Tag tag)
+    public static TagResponse MapToResponse(this Tag tag)
     {
         return new TagResponse
         {
@@ -77,6 +77,13 @@ public static class ContractMapping
             Name = tag.Name,
             ColorHex = tag.ColorHex,
             CreatedOn = tag.CreatedOn
+        };
+    }
+    public static TagsResponse MapToResponse(this IEnumerable<Tag> tags)
+    {
+        return new TagsResponse
+        {
+            Items = tags.Select(t => t.MapToResponse())
         };
     }
 }

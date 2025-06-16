@@ -2,6 +2,6 @@ POST http://localhost:5006/api/tags
 Content-Type: application/json
 
 {
-    "name": "Other",
+    "name": "Collecting",
     "colorHex": "#663399"
 }
