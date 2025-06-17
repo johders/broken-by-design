@@ -4,6 +4,7 @@ CREATE TABLE
         username TEXT NOT NULL UNIQUE,
         email TEXT NOT NULL UNIQUE,
         profile_image_url TEXT,
+        slug TEXT NOT NULL,
         created_on TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
         updated_on TIMESTAMPTZ,
         deleted_on TIMESTAMPTZ

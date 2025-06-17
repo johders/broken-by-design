@@ -139,5 +139,47 @@ public static class ContractMapping
             Items = groups.Select(g => g.MapToResponse())
         };
     }
+
+        public static User MapToUser(this CreateUserRequest request)
+    {
+        return new User
+        {
+            Username = request.Username,
+            Email = request.Email,
+            ProfileImageUrl = request.ProfileImageUrl
+        };
+    }
+
+    public static User MapToUser(this UpdateUserRequest request, User user)
+    {
+        return new User
+        {
+            Id = user.Id,
+            Username = request.Username,
+            Email = request.Email,
+            ProfileImageUrl = request.ProfileImageUrl,
+            CreatedOn = user.CreatedOn,
+            UpdatedOn = DateTimeOffset.UtcNow
+        };
+    }
+
+    public static UserResponse MapToResponse(this User user)
+    {
+        return new UserResponse
+        {
+            Id = user.Id,
+            Username = user.Username,
+            Email = user.Email,
+            ProfileImageUrl = user.ProfileImageUrl,
+            CreatedOn = user.CreatedOn,
+        };
+    }
+    public static UsersResponse MapToResponse(this IEnumerable<User> users)
+    {
+        return new UsersResponse
+        {
+            Items = users.Select(u => u.MapToResponse())
+        };
+    }
 }
 

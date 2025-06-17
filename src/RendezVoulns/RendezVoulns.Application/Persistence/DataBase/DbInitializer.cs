@@ -12,7 +12,7 @@ public static class DbInitializer
         var upgrader = DeployChanges.To
             .PostgresqlDatabase(connectionString)
             .WithScriptsAndCodeEmbeddedInAssembly(Assembly.GetExecutingAssembly(),
-                s => !s.Contains("CreateSlugIndex"))
+                s => !s.Contains("CreateIndexes"))
             .WithTransaction()
             .LogToConsole()
             .Build();
@@ -25,7 +25,7 @@ public static class DbInitializer
         var nonTransactional = DeployChanges.To
             .PostgresqlDatabase(connectionString)
             .WithScriptsAndCodeEmbeddedInAssembly(Assembly.GetExecutingAssembly(),
-                s => s.Contains("CreateSlugIndex"))
+                s => s.Contains("CreateIndexes"))
             .WithoutTransaction()
             .LogToConsole()
             .Build();
