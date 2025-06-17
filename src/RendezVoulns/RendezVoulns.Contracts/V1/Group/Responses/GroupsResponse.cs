@@ -1,4 +1,4 @@
-namespace RendezVoulns.Contracts.V1.Responses;
+namespace RendezVoulns.Contracts.V1.Group.Responses;
 
 public class GroupsResponse
 {

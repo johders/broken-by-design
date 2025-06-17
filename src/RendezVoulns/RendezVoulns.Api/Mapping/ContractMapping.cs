@@ -1,6 +1,12 @@
 using RendezVoulns.Application.Models.Entities;
-using RendezVoulns.Contracts.V1.Requests;
-using RendezVoulns.Contracts.V1.Responses;
+using RendezVoulns.Contracts.V1.AppEvent.Requests;
+using RendezVoulns.Contracts.V1.AppEvent.Responses;
+using RendezVoulns.Contracts.V1.Tag.Requests;
+using RendezVoulns.Contracts.V1.Tag.Responses;
+using RendezVoulns.Contracts.V1.Group.Requests;
+using RendezVoulns.Contracts.V1.Group.Responses;
+using RendezVoulns.Contracts.V1.User.Requests;
+using RendezVoulns.Contracts.V1.User.Responses;
 
 namespace RendezVoulns.Api.Mapping;
 

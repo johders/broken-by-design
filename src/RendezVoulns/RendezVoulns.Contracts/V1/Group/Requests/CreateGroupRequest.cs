@@ -1,4 +1,4 @@
-namespace RendezVoulns.Contracts.V1.Requests;
+namespace RendezVoulns.Contracts.V1.Group.Requests;
 
 public class CreateGroupRequest
 {

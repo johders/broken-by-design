@@ -1,6 +1,6 @@
 using RendezVoulns.Api.Mapping;
 using RendezVoulns.Application.Repositories.Interfaces;
-using RendezVoulns.Contracts.V1.Requests;
+using RendezVoulns.Contracts.V1.AppEvent.Requests;
 
 namespace RendezVoulns.Api.Endpoints.AppEvents;
 

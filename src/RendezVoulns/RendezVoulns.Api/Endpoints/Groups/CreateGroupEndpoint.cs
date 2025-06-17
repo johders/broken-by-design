@@ -1,6 +1,6 @@
 using RendezVoulns.Api.Mapping;
 using RendezVoulns.Application.Repositories.Interfaces;
-using RendezVoulns.Contracts.V1.Requests;
+using RendezVoulns.Contracts.V1.Group.Requests;
 
 namespace RendezVoulns.Api.Endpoints.Groups;
 
