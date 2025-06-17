@@ -1,7 +1,8 @@
-PUT http://localhost:5006/api/users/id_here
+PUT http://localhost:5006/api/users/4ca38371-1b2f-4fbe-814f-f2bb2bb938ec
 Content-Type: application/json
 
 {
-    "name": "Hiker gals",
-    "description": "We like things that are buttery, like croissants and stuff"
+    "username": "joseph_martinez",
+    "email": "jloussd@b9.es",
+    "profileImageUrl": "https://images.fb.gov"
 }

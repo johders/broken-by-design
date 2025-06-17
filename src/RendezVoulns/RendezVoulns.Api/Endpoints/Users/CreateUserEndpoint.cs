@@ -17,8 +17,7 @@ public static class CreateUseEndpoint
                     await repository.CreateAsync(user, token);
 
                     var response = user.MapToResponse();
-                    return TypedResults.Ok(response);
-                    //return TypedResults.CreatedAtRoute(response, GetUserEndpoint.Name, new { user.Id });
+                    return TypedResults.CreatedAtRoute(response, GetUserEndpoint.Name, new { idOrSlug = user.Slug });
                 })
                 .WithName(Name);
         return app;

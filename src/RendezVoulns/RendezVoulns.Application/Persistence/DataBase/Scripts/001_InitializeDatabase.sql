@@ -1,8 +1,8 @@
 CREATE TABLE
     IF NOT EXISTS users (
         id UUID PRIMARY KEY NOT NULL,
-        username TEXT NOT NULL UNIQUE,
-        email TEXT NOT NULL UNIQUE,
+        username TEXT NOT NULL,
+        email TEXT NOT NULL,
         profile_image_url TEXT,
         slug TEXT NOT NULL,
         created_on TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -13,7 +13,7 @@ CREATE TABLE
 CREATE TABLE 
     IF NOT EXISTS groups (
         id UUID PRIMARY KEY NOT NULL,
-        name TEXT NOT NULL UNIQUE,
+        name TEXT NOT NULL,
         description TEXT NOT NULL DEFAULT '',
         created_on TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
         updated_on TIMESTAMPTZ,
@@ -68,7 +68,7 @@ CREATE TABLE
 
 CREATE TABLE IF NOT EXISTS tags (
     id UUID PRIMARY KEY NOT NULL,
-    name TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL,
     color_hex TEXT NOT NULL DEFAULT '#cccccc',
     created_on TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_on TIMESTAMPTZ,

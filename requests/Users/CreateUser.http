@@ -2,7 +2,7 @@ POST http://localhost:5006/api/users
 Content-Type: application/json
 
 {
-    "username": "johnny.s",
-    "email": "johnny.woods@jpmorgan.com",
-    "profileImageUrl": "https://image.omadar.gov"
+    "username": "jean_D_louis",
+    "email": "jloussd@b9.es",
+    "profileImageUrl": "https://images.fb.gov"
 }
