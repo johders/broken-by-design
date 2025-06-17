@@ -1,0 +1,7 @@
+POST http://localhost:5006/api/groups
+Content-Type: application/json
+
+{
+    "name": "Hiker gals",
+    "description": "We're gals who hike and drink coffee"
+}

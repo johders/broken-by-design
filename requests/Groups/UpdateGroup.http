@@ -1,0 +1,7 @@
+PUT http://localhost:5006/api/groups/id_here
+Content-Type: application/json
+
+{
+    "name": "Butter Loverz",
+    "description": "We like things that are buttery, like croissants and stuff"
+}

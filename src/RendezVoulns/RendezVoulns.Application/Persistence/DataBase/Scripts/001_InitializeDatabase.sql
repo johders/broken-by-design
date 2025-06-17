@@ -12,7 +12,7 @@ CREATE TABLE
 CREATE TABLE 
     IF NOT EXISTS groups (
         id UUID PRIMARY KEY NOT NULL,
-        name TEXT NOT NULL,
+        name TEXT NOT NULL UNIQUE,
         description TEXT NOT NULL DEFAULT '',
         created_on TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
         updated_on TIMESTAMPTZ,

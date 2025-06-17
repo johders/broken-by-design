@@ -7,89 +7,89 @@ using RendezVoulns.Application.Repositories.Interfaces;
 
 namespace RendezVoulns.Application.Repositories;
 
-public class TagRepository(IDbConnectionFactory dbConnectionFactory) : ITagRepository
+public class GroupRepository(IDbConnectionFactory dbConnectionFactory) : IGroupRepository
 {
     private readonly IDbConnectionFactory _dbConnectionFactory = dbConnectionFactory;
-    public async Task<bool> CreateAsync(Tag tag, CancellationToken token = default)
+
+    public async Task<bool> CreateAsync(Group group, CancellationToken token = default)
     {
         using var connection = await _dbConnectionFactory.CreateConnectionAsync();
         using var transaction = connection.BeginTransaction();
 
         var sql = """
-            INSERT INTO tags (id, name, color_hex, created_on)
-            VALUES (@Id, @Name, @ColorHex, @CreatedOn);
+            INSERT INTO groups (id, name, description, created_on)
+            VALUES (@Id, @Name, @Description, @CreatedOn);
             """;
 
         try
         {
-            var result = await connection.ExecuteAsync(new CommandDefinition(sql, tag, transaction, cancellationToken: token));
+            var result = await connection.ExecuteAsync(new CommandDefinition(sql, group, transaction, cancellationToken: token));
 
             transaction.Commit();
             return result > 0;
         }
         catch (PostgresException ex) when (ex.SqlState == Npgsql.PostgresErrorCodes.UniqueViolation)
         {
-            throw new DuplicateException("A tag with this name already exists");
+            throw new DuplicateException("A group with this name already exists");
         }
     }
 
-    public async Task<Tag?> GetByIdAsync(Guid id, CancellationToken token = default)
+    public async Task<Group?> GetByIdAsync(Guid id, CancellationToken token = default)
     {
         using var connection = await _dbConnectionFactory.CreateConnectionAsync();
 
         var sql = """
-            SELECT id, name, color_hex AS ColorHex, created_on AS CreatedOn FROM tags
+            SELECT id, name, description AS Description, created_on AS CreatedOn FROM groups
             WHERE id = @Id
             AND deleted_on IS NULL
             """;
-        var tag = await connection.QueryFirstOrDefaultAsync<Tag>(new CommandDefinition(sql, new { Id = id }, cancellationToken: token));
+        var group = await connection.QueryFirstOrDefaultAsync<Group>(new CommandDefinition(sql, new { Id = id }, cancellationToken: token));
 
-        return tag;
+        return group;
     }
 
-    public async Task<IEnumerable<Tag>> GetAllAsync(CancellationToken token = default)
+    public async Task<IEnumerable<Group>> GetAllAsync(CancellationToken token = default)
     {
         using var connection = await _dbConnectionFactory.CreateConnectionAsync();
 
         var sql = """
-            SELECT id, name, color_hex AS ColorHex, created_on AS CreateOn FROM tags
+            SELECT id, name, description AS Description, created_on AS CreatedOn FROM groups
             WHERE deleted_on IS NULL
             """;
-        var tags = await connection.QueryAsync<Tag>(new CommandDefinition(sql, cancellationToken: token));
+        var groups = await connection.QueryAsync<Group>(new CommandDefinition(sql, cancellationToken: token));
 
-        return tags;
+        return groups;
     }
 
-    public async Task<bool> UpdateAsync(Tag tag, CancellationToken token = default)
+    public async Task<bool> UpdateAsync(Group group, CancellationToken token = default)
     {
         using var connection = await _dbConnectionFactory.CreateConnectionAsync();
         var transaction = connection.BeginTransaction();
 
         var sql = """
-            UPDATE tags SET name = @Name, color_hex = @ColorHex, updated_on = @UpdatedOn
+            UPDATE groups SET name = @Name, description = @Description, updated_on = @UpdatedOn
             WHERE id = @id;
             """;
 
         try
         {
-            var result = await connection.ExecuteAsync(new CommandDefinition(sql, tag, transaction, cancellationToken: token));
+            var result = await connection.ExecuteAsync(new CommandDefinition(sql, group, transaction, cancellationToken: token));
 
             transaction.Commit();
             return result > 0;
         }
         catch (PostgresException ex) when (ex.SqlState == Npgsql.PostgresErrorCodes.UniqueViolation)
         {
-            throw new DuplicateException("A tag with this name already exists");
+            throw new DuplicateException("A group with this name already exists");
         }
     }
-
     public async Task<bool> SoftDeleteAsync(Guid id, DateTimeOffset deletedOn, CancellationToken token = default)
     {
         using var connection = await _dbConnectionFactory.CreateConnectionAsync();
         using var transaction = connection.BeginTransaction();
 
         var sql = """
-            UPDATE tags SET updated_on = @DeletedOn, deleted_on = @DeletedOn
+            UPDATE groups SET updated_on = @DeletedOn, deleted_on = @DeletedOn
             WHERE id = @id;
             """;
 
@@ -97,5 +97,11 @@ public class TagRepository(IDbConnectionFactory dbConnectionFactory) : ITagRepos
 
         transaction.Commit();
         return result > 0;
+    }
+
+
+    public Task<bool> ExistsByIdAsync(Guid id)
+    {
+        throw new NotImplementedException();
     }
 }

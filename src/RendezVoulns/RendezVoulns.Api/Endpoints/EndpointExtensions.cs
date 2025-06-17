@@ -1,4 +1,5 @@
 using RendezVoulns.Api.Endpoints.AppEvents;
+using RendezVoulns.Api.Endpoints.Groups;
 using RendezVoulns.Api.Endpoints.Tags;
 
 namespace RendezVoulns.Api.Endpoints;
@@ -9,6 +10,8 @@ public static class EndpointExtensions
     {
         app.MapAppEventEndpoints();
         app.MapTagEndpoints();
+        app.MapGroupEndpoints();
+        // app.MapUserEndpoints();
         return app;
     }
 }

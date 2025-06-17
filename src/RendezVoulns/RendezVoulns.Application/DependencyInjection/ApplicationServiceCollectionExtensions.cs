@@ -11,6 +11,7 @@ public static class ApplicationServiceCollectionExtensions
     {
         services.AddSingleton<IAppEventRepository, AppEventRepository>();
         services.AddSingleton<ITagRepository, TagRepository>();
+        services.AddSingleton<IGroupRepository, GroupRepository>();
         return services;
     }
 
