@@ -6,9 +6,9 @@ public static class GroupEndpointExtensions{
     {
         app.MapCreateGroup();
         app.MapGetGroup();
-        // app.MapGetAllGroups();
-        // app.MapUpdateGroup();
-        // app.MapDeleteGroup();
+        app.MapGetAllGroups();
+        app.MapUpdateGroup();
+        app.MapDeleteGroup();
         return app;
     }
 }

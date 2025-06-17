@@ -1,7 +1,7 @@
-PUT http://localhost:5006/api/groups/id_here
+PUT http://localhost:5006/api/groups/e60d8f08-6c98-4afe-a635-a47b01da7450
 Content-Type: application/json
 
 {
-    "name": "Butter Loverz",
+    "name": "Hiker gals",
     "description": "We like things that are buttery, like croissants and stuff"
 }
