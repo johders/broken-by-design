@@ -20,18 +20,20 @@ public static class ContractMapping
         };
     }
 
-    public static AppEvent MapToAppEvent(this UpdateAppEventRequest request, Guid id)
+    public static AppEvent MapToAppEvent(this UpdateAppEventRequest request, AppEvent appEvent)
     {
         return new AppEvent
         {
-            Id = id,
+            Id = appEvent.Id,
             GroupId = request.GroupId,
             Title = request.Title,
             Description = request.Description,
             Location = request.Location,
             StartTime = request.StartTime,
             EndTime = request.EndTime,
-            CreatedByUserId = Guid.Parse("00000000-0000-0000-0000-000000000001")
+            CreatedByUserId = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+            CreatedOn = appEvent.CreatedOn,
+            UpdatedOn = DateTimeOffset.UtcNow
         };
     }
 
@@ -66,6 +68,18 @@ public static class ContractMapping
         {
             Name = request.Name,
             ColorHex = request.ColorHex
+        };
+    }
+
+    public static Tag MapToTag(this UpdateTagRequest request, Tag tag)
+    {
+        return new Tag
+        {
+            Id = tag.Id,
+            Name = request.Name,
+            ColorHex = request.ColorHex,
+            CreatedOn = tag.CreatedOn,
+            UpdatedOn = DateTimeOffset.UtcNow
         };
     }
 

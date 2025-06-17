@@ -7,8 +7,8 @@ public static class TagEndpointExtensions{
         app.MapCreateTag();
         app.MapGetTag();
         app.MapGetAllTags();
-        // app.MapUpdateTag();
-        // app.MapDeleteTag();
+        app.MapUpdateTag();
+        app.MapDeleteTag();
         return app;
     }
 }

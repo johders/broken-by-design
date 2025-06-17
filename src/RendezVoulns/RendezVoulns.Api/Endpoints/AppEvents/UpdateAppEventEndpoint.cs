@@ -19,7 +19,7 @@ public static class UpdateAppEventEndpoint
                     if (appEvent is null)
                         return Results.NotFound();
 
-                    var updatedEvent = request.MapToAppEvent(id);
+                    var updatedEvent = request.MapToAppEvent(appEvent);
                     await repository.UpdateAsync(updatedEvent, token);
 
                     var response = updatedEvent.MapToResponse();

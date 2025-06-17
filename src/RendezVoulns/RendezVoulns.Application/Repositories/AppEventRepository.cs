@@ -101,7 +101,7 @@ public class AppEventRepository(IDbConnectionFactory dbConnectionFactory) : IApp
 
         var sql = """
             UPDATE events SET group_id = @GroupId, title = @Title, slug = @Slug, description = @Description, location = @Location, 
-            start_time = @StartTime, end_time = @EndTime, created_by_user_id = @CreatedByUserId, created_on = @CreatedOn, updated_on = @UpdatedOn
+            start_time = @StartTime, end_time = @EndTime, updated_on = @UpdatedOn
             WHERE id = @Id;
             """;
 

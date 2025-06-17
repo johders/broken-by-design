@@ -16,9 +16,9 @@ public class TagRepository(IDbConnectionFactory dbConnectionFactory) : ITagRepos
         using var transaction = connection.BeginTransaction();
 
         var sql = """
-        INSERT INTO tags (id, name, color_hex, created_on)
-        VALUES (@Id, @Name, @ColorHex, @CreatedOn);
-        """;
+            INSERT INTO tags (id, name, color_hex, created_on)
+            VALUES (@Id, @Name, @ColorHex, @CreatedOn);
+            """;
 
         try
         {
@@ -38,10 +38,10 @@ public class TagRepository(IDbConnectionFactory dbConnectionFactory) : ITagRepos
         using var connection = await _dbConnectionfactory.CreateConnectionAsync();
 
         var sql = """
-        SELECT id, name, color_hex AS ColorHex, created_on AS CreateOn FROM tags
-        WHERE id = @Id
-        AND deleted_on IS NULL
-        """;
+            SELECT id, name, color_hex AS ColorHex, created_on AS CreatedOn FROM tags
+            WHERE id = @Id
+            AND deleted_on IS NULL
+            """;
         var tag = await connection.QueryFirstOrDefaultAsync<Tag>(new CommandDefinition(sql, new { Id = id }, cancellationToken: token));
 
         return tag;
@@ -52,23 +52,50 @@ public class TagRepository(IDbConnectionFactory dbConnectionFactory) : ITagRepos
         using var connection = await _dbConnectionfactory.CreateConnectionAsync();
 
         var sql = """
-        SELECT id, name, color_hex AS ColorHex, created_on AS CreateOn FROM tags
-        WHERE deleted_on IS NULL
-        """;
+            SELECT id, name, color_hex AS ColorHex, created_on AS CreateOn FROM tags
+            WHERE deleted_on IS NULL
+            """;
         var tags = await connection.QueryAsync<Tag>(new CommandDefinition(sql, cancellationToken: token));
 
         return tags;
     }
 
-
-
-    public Task<bool> SoftDeleteAsync(Guid id, DateTimeOffset deletedOn, CancellationToken token = default)
+    public async Task<bool> UpdateAsync(Tag appEvent, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        using var connection = await _dbConnectionfactory.CreateConnectionAsync();
+        var transaction = connection.BeginTransaction();
+
+        var sql = """
+            UPDATE tags SET name = @Name, color_hex = @ColorHex, updated_on = @UpdatedOn
+            WHERE id = @id;
+            """;
+
+        try
+        {
+            var result = await connection.ExecuteAsync(new CommandDefinition(sql, appEvent, transaction, cancellationToken: token));
+
+            transaction.Commit();
+            return result > 0;
+        }
+        catch (PostgresException ex) when (ex.SqlState == Npgsql.PostgresErrorCodes.UniqueViolation)
+        {
+            throw new DuplicateException("A tag with this name already exists");
+        }
     }
 
-    public Task<bool> UpdateAsync(Tag appEvent, CancellationToken token = default)
+    public async Task<bool> SoftDeleteAsync(Guid id, DateTimeOffset deletedOn, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        using var connection = await _dbConnectionfactory.CreateConnectionAsync();
+        using var transaction = connection.BeginTransaction();
+
+        var sql = """
+            UPDATE tags set updated_on = @DeletedOn, deleted_on = @DeletedOn
+            WHERE id = @id;
+            """;
+
+        var result = await connection.ExecuteAsync(new CommandDefinition(sql, new { Id = id, DeletedOn = deletedOn }, transaction, cancellationToken: token));
+
+        transaction.Commit();
+        return result > 0;
     }
 }
