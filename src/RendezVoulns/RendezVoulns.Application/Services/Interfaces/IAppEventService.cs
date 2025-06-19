@@ -5,7 +5,7 @@ namespace RendezVoulns.Application.Services.Interfaces;
 
 public interface IAppEventService
 {
-    Task<bool> CreateAsync(Result<AppEvent> appEvent, CancellationToken token = default);
+    Task<Result> CreateAsync(AppEvent appEvent, CancellationToken token = default);
     Task<Result<AppEvent?>> GetByIdAsync(Guid id, CancellationToken token = default);
     Task<Result<AppEvent?>> GetBySlugAsync(string slug, CancellationToken token = default);
     Task<Result<IEnumerable<AppEvent>>> GetAllAsync(CancellationToken token = default);

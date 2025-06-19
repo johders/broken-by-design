@@ -2,6 +2,8 @@ using Microsoft.Extensions.DependencyInjection;
 using RendezVoulns.Application.Persistence.Database;
 using RendezVoulns.Application.Repositories;
 using RendezVoulns.Application.Repositories.Interfaces;
+using RendezVoulns.Application.Services;
+using RendezVoulns.Application.Services.Interfaces;
 
 namespace RendezVoulns.Application.DependencyInjection;
 
@@ -13,6 +15,11 @@ public static class ApplicationServiceCollectionExtensions
         services.AddSingleton<ITagRepository, TagRepository>();
         services.AddSingleton<IGroupRepository, GroupRepository>();
         services.AddSingleton<IUserRepository, UserRepository>();
+
+        services.AddSingleton<IAppEventService, AppEventService>();
+        services.AddSingleton<ITagService, TagService>();
+        services.AddSingleton<IGroupService, GroupService>();
+        services.AddSingleton<IUserService, UserService>();
         return services;
     }
 
