@@ -1,4 +1,4 @@
-namespace RendezVoulns.Application.Errors.Postgresql;
+namespace RendezVoulns.Application.Common.Exceptions;
 
 public class ForeignKeyViolationException(string message) : Exception(message)
 {

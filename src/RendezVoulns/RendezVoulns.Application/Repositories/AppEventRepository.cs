@@ -1,6 +1,6 @@
 using Dapper;
 using Npgsql;
-using RendezVoulns.Application.Errors.Postgresql;
+using RendezVoulns.Application.Common.Exceptions;
 using RendezVoulns.Application.Models.Entities;
 using RendezVoulns.Application.Persistence.Database;
 using RendezVoulns.Application.Repositories.Interfaces;
@@ -10,7 +10,6 @@ namespace RendezVoulns.Application.Repositories;
 public class AppEventRepository(IDbConnectionFactory dbConnectionFactory) : IAppEventRepository
 {
     private readonly IDbConnectionFactory _dbConnectionFactory = dbConnectionFactory;
-    private readonly List<AppEvent> _appEvents = [];
     public async Task<bool> CreateAsync(AppEvent appEvent, CancellationToken token)
     {
         using var connection = await _dbConnectionFactory.CreateConnectionAsync();

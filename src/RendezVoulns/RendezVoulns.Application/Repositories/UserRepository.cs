@@ -1,6 +1,6 @@
 using Dapper;
 using Npgsql;
-using RendezVoulns.Application.Errors.Postgresql;
+using RendezVoulns.Application.Common.Exceptions;
 using RendezVoulns.Application.Models.Entities;
 using RendezVoulns.Application.Persistence.Database;
 using RendezVoulns.Application.Repositories.Interfaces;
