@@ -1,7 +1,7 @@
 namespace RendezVoulns.Application.Common.Exceptions;
 
-public class DuplicateException(string message) : Exception(message)
+public class DuplicateException(string code, string message) : ServiceException(code, message)
 {
-
+    
 }
 

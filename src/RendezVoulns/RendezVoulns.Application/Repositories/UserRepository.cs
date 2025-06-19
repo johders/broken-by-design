@@ -32,10 +32,10 @@ public class UserRepository(IDbConnectionFactory dbConnectionFactory) : IUserRep
         {
             throw ex.ConstraintName switch
             {
-                "users_username_active_idx" => new DuplicateException("A user with this username already exists"),
-                "users_email_active_idx" => new DuplicateException("A user with this email already exists"),
-                "users_slug_active_idx" => new DuplicateException("A user with this slug already exists"),
-                _ => new DuplicateException("A user with these details already exists.")
+                "users_username_active_idx" => new DuplicateException("TEMP", "A user with this username already exists"),
+                "users_email_active_idx" => new DuplicateException("TEMP", "A user with this email already exists"),
+                "users_slug_active_idx" => new DuplicateException("TEMP", "A user with this slug already exists"),
+                _ => new DuplicateException("TEMP", "A user with these details already exists.")
             };
         }
     }
@@ -104,10 +104,10 @@ public class UserRepository(IDbConnectionFactory dbConnectionFactory) : IUserRep
         {
             throw ex.ConstraintName switch
             {
-                "users_username_active_idx" => new DuplicateException("A user with this username already exists"),
-                "users_email_active_idx" => new DuplicateException("A user with this email already exists"),
-                "users_slug_active_idx" => new DuplicateException("A user with this slug already exists"),
-                _ => new DuplicateException("A user with these details already exists.")
+                "users_username_active_idx" => new DuplicateException("TEMP", "A user with this username already exists"),
+                "users_email_active_idx" => new DuplicateException("TEMP", "A user with this email already exists"),
+                "users_slug_active_idx" => new DuplicateException("TEMP", "A user with this slug already exists"),
+                _ => new DuplicateException("TEMP", "A user with these details already exists.")
             };
         }
     }

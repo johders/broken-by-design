@@ -30,7 +30,7 @@ public class GroupRepository(IDbConnectionFactory dbConnectionFactory) : IGroupR
         }
         catch (PostgresException ex) when (ex.SqlState == Npgsql.PostgresErrorCodes.UniqueViolation)
         {
-            throw new DuplicateException("A group with this name already exists");
+            throw new DuplicateException("TEMP", "A group with this name already exists");
         }
     }
 
@@ -80,7 +80,7 @@ public class GroupRepository(IDbConnectionFactory dbConnectionFactory) : IGroupR
         }
         catch (PostgresException ex) when (ex.SqlState == Npgsql.PostgresErrorCodes.UniqueViolation)
         {
-            throw new DuplicateException("A group with this name already exists");
+            throw new DuplicateException("TEMP", "A group with this name already exists");
         }
     }
     public async Task<bool> SoftDeleteAsync(Guid id, DateTimeOffset deletedOn, CancellationToken token = default)

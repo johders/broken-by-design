@@ -3,8 +3,17 @@ public static class Errors
 {
     public static class AppEvents
     {
-        public static readonly Error Duplicate = new("AppEvents.Duplicate", "An event with this name already exists.");
+        public const string DuplicateErrorCode = "AppEvents.Duplicate";
+        public const string DuplicateSlugErrorCode = "AppEvents.DuplicateSlug";
+        public const string DuplicateTitleErrorCode = "AppEvents.DuplicateTitle";
+        public const string InvalidReferenceErrorCode = "AppEvents.InvalidReference";
+        public const string InvalidGroupReferenceErrorCode = "AppEvents.InvalidGroup";
+        public const string InvalidUserReferenceErrorCode = "AppEvents.InvalidUser";
+        public const string UpdateFailedErrorCode = "AppEvents.UpdateFailed";
         public static readonly Error NotFound = new("AppEvents.NotFound", "Event not found.");
+        public static readonly Error CreateFailed = new("AppEvents.CreateFailed", "The event could not be created.");
+        public static readonly Error UpdateFailed = new(UpdateFailedErrorCode, "The event could not be updated.");
+        public static readonly Error DeleteFailed = new("AppEvents.DeleteFailed", "The event could not be deleted.");
     }
 
     public static class Users

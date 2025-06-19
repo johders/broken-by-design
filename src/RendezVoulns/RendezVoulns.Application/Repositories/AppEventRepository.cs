@@ -1,5 +1,6 @@
 using Dapper;
 using Npgsql;
+using RendezVoulns.Application.Common.Errors;
 using RendezVoulns.Application.Common.Exceptions;
 using RendezVoulns.Application.Models.Entities;
 using RendezVoulns.Application.Persistence.Database;
@@ -29,11 +30,21 @@ public class AppEventRepository(IDbConnectionFactory dbConnectionFactory) : IApp
         }
         catch (PostgresException ex) when (ex.SqlState == Npgsql.PostgresErrorCodes.UniqueViolation)
         {
-            throw new DuplicateException("An event with this slug already exists");
+            throw ex.ConstraintName switch
+            {
+                "events_title_active_idx" => new DuplicateException(Errors.AppEvents.DuplicateTitleErrorCode, Messages.AppEvents.DuplicateTitle),
+                "events_slug_active_idx" => new DuplicateException(Errors.AppEvents.DuplicateSlugErrorCode, Messages.AppEvents.DuplicateSlug),
+                _ => new DuplicateException(Errors.AppEvents.DuplicateErrorCode, Messages.AppEvents.Duplicate)
+            };
         }
         catch (PostgresException ex) when (ex.SqlState == Npgsql.PostgresErrorCodes.ForeignKeyViolation)
         {
-            throw new ForeignKeyViolationException("Invalid group/user reference");
+            throw ex.ConstraintName switch
+            {
+                "fk_event_group" => new ForeignKeyViolationException(Errors.AppEvents.InvalidGroupReferenceErrorCode, Messages.AppEvents.InvalidGroup),
+                "fk_event_creator" => new ForeignKeyViolationException(Errors.AppEvents.InvalidUserReferenceErrorCode, Messages.AppEvents.InvalidUser),
+                _ => new ForeignKeyViolationException(Errors.AppEvents.InvalidGroupReferenceErrorCode, Messages.AppEvents.InvalidReference)
+            };
         }
     }
 
@@ -113,11 +124,21 @@ public class AppEventRepository(IDbConnectionFactory dbConnectionFactory) : IApp
         }
         catch (PostgresException ex) when (ex.SqlState == Npgsql.PostgresErrorCodes.UniqueViolation)
         {
-            throw new DuplicateException("An event with this slug already exists");
+            throw ex.ConstraintName switch
+            {
+                "events_title_active_idx" => new DuplicateException(Errors.AppEvents.DuplicateTitleErrorCode, Messages.AppEvents.DuplicateTitle),
+                "events_slug_active_idx" => new DuplicateException(Errors.AppEvents.DuplicateSlugErrorCode, Messages.AppEvents.DuplicateSlug),
+                _ => new DuplicateException(Errors.AppEvents.DuplicateErrorCode, Messages.AppEvents.Duplicate)
+            };
         }
         catch (PostgresException ex) when (ex.SqlState == Npgsql.PostgresErrorCodes.ForeignKeyViolation)
         {
-            throw new ForeignKeyViolationException("Invalid group/user reference");
+            throw ex.ConstraintName switch
+            {
+                "fk_event_group" => new ForeignKeyViolationException(Errors.AppEvents.InvalidGroupReferenceErrorCode, Messages.AppEvents.InvalidGroup),
+                "fk_event_creator" => new ForeignKeyViolationException(Errors.AppEvents.InvalidUserReferenceErrorCode, Messages.AppEvents.InvalidUser),
+                _ => new ForeignKeyViolationException(Errors.AppEvents.InvalidGroupReferenceErrorCode, Messages.AppEvents.InvalidReference)
+            };
         }
     }
 

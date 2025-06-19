@@ -1,5 +1,5 @@
 using RendezVoulns.Api.Mapping;
-using RendezVoulns.Application.Repositories.Interfaces;
+using RendezVoulns.Application.Services.Interfaces;
 
 namespace RendezVoulns.Api.Endpoints.AppEvents;
 
@@ -10,17 +10,22 @@ public static class GetAppEventEndpoint
     public static IEndpointRouteBuilder MapGetAppEvent(this IEndpointRouteBuilder app)
     {
         app.MapGet(ApiEndpoints.AppEvents.Get, async (
-            string idOrSlug, IAppEventRepository repository,
+            string idOrSlug, IAppEventService service,
             CancellationToken token) =>
                 {
-                    var appEvent = Guid.TryParse(idOrSlug, out var id)
-                        ? await repository.GetByIdAsync(id, token)
-                        : await repository.GetBySlugAsync(idOrSlug, token);
+                    var result = Guid.TryParse(idOrSlug, out var id)
+                        ? await service.GetByIdAsync(id, token)
+                        : await service.GetBySlugAsync(idOrSlug, token);
 
-                    if (appEvent is null)
-                        return Results.NotFound();
+                    if (result.IsFailure || result.Value is null)
+                    {
+                        return result.Error!.ToProblem(
+                            title: "Event not found",
+                            statusCode: StatusCodes.Status404NotFound
+                        );   
+                    }
 
-                    var response = appEvent.MapToResponse();
+                    var response = result.Value.MapToResponse();
                     return TypedResults.Ok(response);
                 })
                 .WithName(Name);

@@ -1,4 +1,4 @@
-using RendezVoulns.Application.Repositories.Interfaces;
+using RendezVoulns.Application.Services.Interfaces;
 
 namespace RendezVoulns.Api.Endpoints.AppEvents;
 
@@ -9,19 +9,29 @@ public static class DeleteAppEventEndpoint
     public static IEndpointRouteBuilder MapDeleteAppEvent(this IEndpointRouteBuilder app)
     {
         app.MapDelete(ApiEndpoints.AppEvents.Delete, async (
-            Guid id, IAppEventRepository repository,
+            Guid id, IAppEventService service,
             CancellationToken token) =>
             {
-                var appEvent = await repository.GetByIdAsync(id, token);
+                var getResult = await service.GetByIdAsync(id, token);
 
-                if (appEvent is null)
-                    return Results.NotFound();
+                if (getResult.IsFailure)
+                {
+                    return getResult.Error!.ToProblem(
+                        title: "Not Found",
+                        statusCode: StatusCodes.Status404NotFound);
+                }
 
-                bool deleted = await repository.SoftDeleteAsync(id, DateTimeOffset.UtcNow, token);
+                var deleteResult = await service.SoftDeleteAsync(id, DateTimeOffset.UtcNow, token);
 
-                return deleted
-                ? TypedResults.Ok()
-                : Results.StatusCode(StatusCodes.Status500InternalServerError);
+                if (deleteResult.IsFailure)
+                {
+                    return deleteResult.Error!.ToProblem(
+                        title: "Delete Failed",
+                        statusCode: StatusCodes.Status500InternalServerError
+                    );
+                }
+
+                return TypedResults.Ok();
             })
             .WithName(Name);
         return app;
