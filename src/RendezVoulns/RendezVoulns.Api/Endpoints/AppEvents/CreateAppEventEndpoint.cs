@@ -1,5 +1,4 @@
 using RendezVoulns.Api.Mapping;
-using RendezVoulns.Application.Common.Errors;
 using RendezVoulns.Application.Services.Interfaces;
 using RendezVoulns.Contracts.V1.AppEvent.Requests;
 
@@ -19,24 +18,7 @@ public static class CreateAppEventEndpoint
                     var result = await service.CreateAsync(appEvent, token);
 
                     if (result.IsFailure)
-                    {
-                        var error = result.Error!;
-                        return error.Code switch
-                        {
-                            Errors.AppEvents.DuplicateTitleErrorCode or Errors.AppEvents.DuplicateSlugErrorCode or Errors.AppEvents.DuplicateErrorCode =>
-                                error.ToProblem(
-                                    title: "Conflict",
-                                    statusCode: StatusCodes.Status409Conflict),
-                            Errors.AppEvents.InvalidGroupReferenceErrorCode or Errors.AppEvents.InvalidUserReferenceErrorCode =>
-                                error.ToProblem(
-                                    title: "Bad Request",
-                                    statusCode: StatusCodes.Status400BadRequest),
-                            _ =>
-                                error.ToProblem(
-                                    title: "Unexpected Error",
-                                    statusCode: StatusCodes.Status500InternalServerError)
-                        };
-                    }
+                        return result.Error!.ToProblemDetails();
 
                     var response = appEvent.MapToResponse();
                     return TypedResults.CreatedAtRoute(response, GetAppEventEndpoint.Name, new {idOrSlug = appEvent.Slug});

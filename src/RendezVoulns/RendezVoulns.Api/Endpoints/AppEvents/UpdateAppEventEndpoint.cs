@@ -40,14 +40,14 @@ public static class UpdateAppEventEndpoint
                                 error.ToProblem(
                                     title: "Update Failed",
                                     statusCode: StatusCodes.Status500InternalServerError),
-                            Errors.AppEvents.DuplicateTitleErrorCode or Errors.AppEvents.DuplicateSlugErrorCode or Errors.AppEvents.DuplicateErrorCode =>
-                                error.ToProblem(
-                                    title: "Conflict",
-                                    statusCode: StatusCodes.Status409Conflict),
-                            Errors.AppEvents.InvalidGroupReferenceErrorCode or Errors.AppEvents.InvalidUserReferenceErrorCode =>
-                                error.ToProblem(
-                                    title: "Bad Request",
-                                    statusCode: StatusCodes.Status400BadRequest),
+                            // Errors.AppEvents.DuplicateTitleErrorCode or Errors.AppEvents.DuplicateSlugErrorCode or Errors.AppEvents.DuplicateErrorCode =>
+                            //     error.ToProblem(
+                            //         title: "Conflict",
+                            //         statusCode: StatusCodes.Status409Conflict),
+                            // Errors.AppEvents.InvalidGroupReferenceErrorCode or Errors.AppEvents.InvalidUserReferenceErrorCode =>
+                            //     error.ToProblem(
+                            //         title: "Bad Request",
+                            //         statusCode: StatusCodes.Status400BadRequest),
                             _ =>
                                 error.ToProblem(
                                     title: "Unexpected Error",

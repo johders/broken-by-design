@@ -1,19 +1,34 @@
+using RendezVoulns.Application.Models.Entities;
+
 namespace RendezVoulns.Application.Common.Errors;
 public static class Errors
 {
+    public const string Duplicate = "Duplicate";
+    public const string Invalid = "Invalid";
+    public const string Slug = "Slug";
+    public const string Name = "Name";
+    public const string Title = "Title";
+    public const string NotFound = "NotFound";
+    public const string CreateFailed = "CreateFailed";
+    public const string UpdateFailed = "UpdateFailed";
+    public const string DeleteFailed = "DeleteFailed";
     public static class AppEvents
     {
-        public const string DuplicateErrorCode = "AppEvents.Duplicate";
-        public const string DuplicateSlugErrorCode = "AppEvents.DuplicateSlug";
-        public const string DuplicateTitleErrorCode = "AppEvents.DuplicateTitle";
-        public const string InvalidReferenceErrorCode = "AppEvents.InvalidReference";
-        public const string InvalidGroupReferenceErrorCode = "AppEvents.InvalidGroup";
-        public const string InvalidUserReferenceErrorCode = "AppEvents.InvalidUser";
-        public const string UpdateFailedErrorCode = "AppEvents.UpdateFailed";
-        public static readonly Error NotFound = new("AppEvents.NotFound", "Event not found.");
-        public static readonly Error CreateFailed = new("AppEvents.CreateFailed", "The event could not be created.");
-        public static readonly Error UpdateFailed = new(UpdateFailedErrorCode, "The event could not be updated.");
-        public static readonly Error DeleteFailed = new("AppEvents.DeleteFailed", "The event could not be deleted.");
+        private const string Domain = "AppEvents";
+        public const string DuplicateErrorCode = $"{Domain}.{Duplicate}";
+        public const string DuplicateSlugErrorCode = $"{Domain}.{Duplicate}{Slug}";
+        public const string DuplicateTitleErrorCode = $"{Domain}.{Duplicate}{Title}";
+        public const string InvalidReferenceErrorCode = $"{Domain}.{Invalid}Reference";
+        public const string InvalidGroupErrorCode = $"{Domain}.{Invalid}{nameof(Group)}";
+        public const string InvalidUserErrorCode = $"{Domain}.{Invalid}{nameof(User)}";
+        public const string CreateFailedErrorCode = $"{Domain}.{CreateFailed}";
+        public const string UpdateFailedErrorCode = $"{Domain}.{UpdateFailed}";
+        public const string DeleteFailedErrorCode = $"{Domain}.{DeleteFailed}";
+        public const string NotFoundErrorCode = $"{Domain}.{NotFound}";
+        public static readonly Error NotFoundError = new(NotFoundErrorCode, "Event not found.");
+        public static readonly Error CreateFailedError = new(CreateFailedErrorCode, "The event could not be created.");
+        public static readonly Error UpdateFailedError = new(UpdateFailedErrorCode, "The event could not be updated.");
+        public static readonly Error DeleteFailedError = new(DeleteFailedErrorCode, "The event could not be deleted.");
     }
 
     public static class Users

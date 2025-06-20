@@ -20,7 +20,7 @@ public class AppEventService(IAppEventRepository appEventRepository, ILogger<App
 
             return created
                 ? Result.Success()
-                : Result.Failure(Errors.AppEvents.CreateFailed);
+                : Result.Failure(Errors.AppEvents.CreateFailedError);
         }
         catch (DuplicateException ex)
         {
@@ -37,7 +37,7 @@ public class AppEventService(IAppEventRepository appEventRepository, ILogger<App
         var appEvent = await _appEventRepository.GetByIdAsync(id, token);
         return appEvent is not null
             ? Result<AppEvent?>.Success(appEvent) 
-            : Result<AppEvent?>.Failure(Errors.AppEvents.NotFound);
+            : Result<AppEvent?>.Failure(Errors.AppEvents.NotFoundError);
     }
 
     public async Task<Result<AppEvent?>> GetBySlugAsync(string slug, CancellationToken token = default)
@@ -46,7 +46,7 @@ public class AppEventService(IAppEventRepository appEventRepository, ILogger<App
 
         return appEvent is not null
             ? Result<AppEvent?>.Success(appEvent)
-            : Result<AppEvent?>.Failure(Errors.AppEvents.NotFound);
+            : Result<AppEvent?>.Failure(Errors.AppEvents.NotFoundError);
     }
 
     public async Task<Result<IEnumerable<AppEvent>>> GetAllAsync(CancellationToken token = default)
@@ -63,7 +63,7 @@ public class AppEventService(IAppEventRepository appEventRepository, ILogger<App
 
             return updated
                 ? Result.Success()
-                : Result.Failure(Errors.AppEvents.UpdateFailed);
+                : Result.Failure(Errors.AppEvents.UpdateFailedError);
         }
         catch (DuplicateException ex)
         {
@@ -80,7 +80,7 @@ public class AppEventService(IAppEventRepository appEventRepository, ILogger<App
 
         return deleted
             ? Result.Success()
-            : Result.Failure(Errors.AppEvents.DeleteFailed);
+            : Result.Failure(Errors.AppEvents.DeleteFailedError);
     }
 
     public Task<Result> ExistsByIdAsync(Guid id)

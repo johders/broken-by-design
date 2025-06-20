@@ -41,13 +41,12 @@ public class AppEventRepository(IDbConnectionFactory dbConnectionFactory) : IApp
         {
             throw ex.ConstraintName switch
             {
-                "fk_event_group" => new ForeignKeyViolationException(Errors.AppEvents.InvalidGroupReferenceErrorCode, Messages.AppEvents.InvalidGroup),
-                "fk_event_creator" => new ForeignKeyViolationException(Errors.AppEvents.InvalidUserReferenceErrorCode, Messages.AppEvents.InvalidUser),
-                _ => new ForeignKeyViolationException(Errors.AppEvents.InvalidGroupReferenceErrorCode, Messages.AppEvents.InvalidReference)
+                "fk_event_group" => new ForeignKeyViolationException(Errors.AppEvents.InvalidGroupErrorCode, Messages.AppEvents.InvalidGroup),
+                "fk_event_creator" => new ForeignKeyViolationException(Errors.AppEvents.InvalidUserErrorCode, Messages.AppEvents.InvalidUser),
+                _ => new ForeignKeyViolationException(Errors.AppEvents.InvalidReferenceErrorCode, Messages.AppEvents.InvalidReference)
             };
         }
     }
-
     public async Task<AppEvent?> GetByIdAsync(Guid id, CancellationToken token)
     {
         using var connection = await _dbConnectionFactory.CreateConnectionAsync();
@@ -135,9 +134,9 @@ public class AppEventRepository(IDbConnectionFactory dbConnectionFactory) : IApp
         {
             throw ex.ConstraintName switch
             {
-                "fk_event_group" => new ForeignKeyViolationException(Errors.AppEvents.InvalidGroupReferenceErrorCode, Messages.AppEvents.InvalidGroup),
-                "fk_event_creator" => new ForeignKeyViolationException(Errors.AppEvents.InvalidUserReferenceErrorCode, Messages.AppEvents.InvalidUser),
-                _ => new ForeignKeyViolationException(Errors.AppEvents.InvalidGroupReferenceErrorCode, Messages.AppEvents.InvalidReference)
+                "fk_event_group" => new ForeignKeyViolationException(Errors.AppEvents.InvalidGroupErrorCode, Messages.AppEvents.InvalidGroup),
+                "fk_event_creator" => new ForeignKeyViolationException(Errors.AppEvents.InvalidUserErrorCode, Messages.AppEvents.InvalidUser),
+                _ => new ForeignKeyViolationException(Errors.AppEvents.InvalidReferenceErrorCode, Messages.AppEvents.InvalidReference)
             };
         }
     }
