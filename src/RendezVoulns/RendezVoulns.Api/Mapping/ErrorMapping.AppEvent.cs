@@ -1,8 +1,8 @@
-namespace RendezVoulns.Api.Mapping;
-
 using Microsoft.AspNetCore.Http.HttpResults;
 using RendezVoulns.Application.Common.Errors;
 using RendezVoulns.Application.Models.Entities;
+
+namespace RendezVoulns.Api.Mapping;
 
 public static partial class ErrorMapping
 {
@@ -24,7 +24,7 @@ public static partial class ErrorMapping
             Errors.AppEvents.UpdateFailedErrorCode or
             Errors.AppEvents.DeleteFailedErrorCode => (StatusCodes.Status409Conflict, Conflict),
 
-            _ => (StatusCodes.Status500InternalServerError, $"{nameof(AppEvent)}: {Unexpected}" )
+            _ => (StatusCodes.Status500InternalServerError, $"{nameof(AppEvent)}: {Unexpected}")
         };
 
         return CreateProblemResult(statusCode, title, error);

@@ -32,6 +32,20 @@ public static class Errors
         public static readonly Error DeleteFailedError = new(DeleteFailedErrorCode, "The event could not be deleted.");
     }
 
+    public static class Groups
+    {
+        private const string Domain = nameof(Group);
+        public const string DuplicateNameErrorCode = $"{Domain}.{Duplicate}{Name}";
+        public const string CreateFailedErrorCode = $"{Domain}.{CreateFailed}";
+        public const string UpdateFailedErrorCode = $"{Domain}.{UpdateFailed}";
+        public const string DeleteFailedErrorCode = $"{Domain}.{DeleteFailed}";
+        public const string NotFoundErrorCode = $"{Domain}.{NotFound}";
+        public static readonly Error NotFoundError = new(NotFoundErrorCode, "Group not found.");
+        public static readonly Error CreateFailedError = new(CreateFailedErrorCode, "The group could not be created.");
+        public static readonly Error UpdateFailedError = new(UpdateFailedErrorCode, "The group could not be updated.");
+        public static readonly Error DeleteFailedError = new(DeleteFailedErrorCode, "The group could not be deleted.");
+    }
+
     public static class Users
     {
         private const string DuplicateCode = "Users.Duplicate";
@@ -39,12 +53,6 @@ public static class Errors
         public static readonly Error DuplicateEmail = new(DuplicateCode, "A user with this email already exists.");
         public static readonly Error DuplicateSlug = new(DuplicateCode, "A user with this slug already exists.");
         public static readonly Error NotFound = new("Users.NotFound", "User not found.");
-    }
-
-    public static class Groups
-    {
-        public static readonly Error Duplicate = new("Groups.Duplicate", "A group with this name already exists.");
-        public static readonly Error NotFound = new("Groups.NotFound", "Group not found.");
     }
 
     public static class Tags

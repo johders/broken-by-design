@@ -1,5 +1,6 @@
 using Dapper;
 using Npgsql;
+using RendezVoulns.Application.Common.Errors;
 using RendezVoulns.Application.Common.Exceptions;
 using RendezVoulns.Application.Models.Entities;
 using RendezVoulns.Application.Persistence.Database;
@@ -30,7 +31,7 @@ public class GroupRepository(IDbConnectionFactory dbConnectionFactory) : IGroupR
         }
         catch (PostgresException ex) when (ex.SqlState == Npgsql.PostgresErrorCodes.UniqueViolation)
         {
-            throw new DuplicateException("TEMP", "A group with this name already exists");
+            throw new DuplicateException(Errors.Groups.DuplicateNameErrorCode, Messages.Groups.DuplicateName);
         }
     }
 
@@ -80,7 +81,7 @@ public class GroupRepository(IDbConnectionFactory dbConnectionFactory) : IGroupR
         }
         catch (PostgresException ex) when (ex.SqlState == Npgsql.PostgresErrorCodes.UniqueViolation)
         {
-            throw new DuplicateException("TEMP", "A group with this name already exists");
+            throw new DuplicateException(Errors.Groups.DuplicateNameErrorCode, Messages.Groups.DuplicateName);
         }
     }
     public async Task<bool> SoftDeleteAsync(Guid id, DateTimeOffset deletedOn, CancellationToken token = default)
