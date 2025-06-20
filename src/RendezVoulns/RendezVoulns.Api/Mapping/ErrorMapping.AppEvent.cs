@@ -17,7 +17,12 @@ public static partial class ErrorMapping
             Errors.AppEvents.DuplicateErrorCode => (StatusCodes.Status409Conflict, Conflict),
 
             Errors.AppEvents.InvalidGroupErrorCode or
-            Errors.AppEvents.InvalidUserErrorCode => (StatusCodes.Status400BadRequest, BadRequest),
+            Errors.AppEvents.InvalidUserErrorCode or
+            Errors.AppEvents.InvalidReferenceErrorCode => (StatusCodes.Status400BadRequest, BadRequest),
+
+            Errors.AppEvents.CreateFailedErrorCode or
+            Errors.AppEvents.UpdateFailedErrorCode or
+            Errors.AppEvents.DeleteFailedErrorCode => (StatusCodes.Status409Conflict, Conflict),
 
             _ => (StatusCodes.Status500InternalServerError, $"{nameof(AppEvent)}: {Unexpected}" )
         };

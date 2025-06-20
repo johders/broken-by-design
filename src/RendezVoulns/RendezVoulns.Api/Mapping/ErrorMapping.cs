@@ -11,11 +11,9 @@ public static partial class ErrorMapping
     private const string Conflict = "Conflict";
     private const string BadRequest = "Bad Request";
     private const string Unexpected = "Unexpected Error";
-    public static IResult ToProblemDetails(this Error error)
+    public static IResult ToProblem(this Error error)
     {
-        var domain = error.Code.Split('.')[0];
-
-        return domain switch
+        return error.Domain switch
         {
             nameof(AppEvent) => MapAppEventErrors(error),
             // nameof(Group) => MappGroupErrors(error),

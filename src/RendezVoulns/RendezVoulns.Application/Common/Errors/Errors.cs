@@ -12,9 +12,10 @@ public static class Errors
     public const string CreateFailed = "CreateFailed";
     public const string UpdateFailed = "UpdateFailed";
     public const string DeleteFailed = "DeleteFailed";
+    
     public static class AppEvents
     {
-        private const string Domain = "AppEvents";
+        private const string Domain = nameof(AppEvent);
         public const string DuplicateErrorCode = $"{Domain}.{Duplicate}";
         public const string DuplicateSlugErrorCode = $"{Domain}.{Duplicate}{Slug}";
         public const string DuplicateTitleErrorCode = $"{Domain}.{Duplicate}{Title}";

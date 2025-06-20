@@ -17,16 +17,10 @@ public static class GetAppEventEndpoint
                         ? await service.GetByIdAsync(id, token)
                         : await service.GetBySlugAsync(idOrSlug, token);
 
-                    if (result.IsFailure || result.Value is null)
-                    {
-                        return result.Error!.ToProblem(
-                            title: "Event not found",
-                            statusCode: StatusCodes.Status404NotFound
-                        );   
-                    }
-
-                    var response = result.Value.MapToResponse();
-                    return TypedResults.Ok(response);
+                    return result.Match(
+                        onSuccess: appEvent => TypedResults.Ok(appEvent!.MapToResponse()),
+                        onFailure: error => error.ToProblem()
+                    );
                 })
                 .WithName(Name);
         return app;

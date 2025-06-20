@@ -55,23 +55,23 @@ public class AppEventService(IAppEventRepository appEventRepository, ILogger<App
         return Result<IEnumerable<AppEvent>>.Success(appEvents);
     }
 
-    public async Task<Result> UpdateAsync(AppEvent appEvent, CancellationToken token = default)
+    public async Task<Result<AppEvent>> UpdateAsync(AppEvent appEvent, CancellationToken token = default)
     {
         try
         {
             var updated = await _appEventRepository.UpdateAsync(appEvent, token);
 
             return updated
-                ? Result.Success()
-                : Result.Failure(Errors.AppEvents.UpdateFailedError);
+                ? Result<AppEvent>.Success(appEvent)
+                : Result<AppEvent>.Failure(Errors.AppEvents.UpdateFailedError);
         }
         catch (DuplicateException ex)
         {
-            return Result.Failure(new Error(ex.Code, ex.Message));
+            return Result<AppEvent>.Failure(new Error(ex.Code, ex.Message));
         }
         catch (ForeignKeyViolationException ex)
         {
-            return Result.Failure(new Error(ex.Code, ex.Message));
+            return Result<AppEvent>.Failure(new Error(ex.Code, ex.Message));
         }
     }
     public async Task<Result> SoftDeleteAsync(Guid id, DateTimeOffset deletedOn, CancellationToken token = default)

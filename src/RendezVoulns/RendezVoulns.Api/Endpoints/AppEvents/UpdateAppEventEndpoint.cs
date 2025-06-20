@@ -15,48 +15,17 @@ public static class UpdateAppEventEndpoint
             Guid id, UpdateAppEventRequest request,
             IAppEventService service, CancellationToken token) =>
                 {
-                    var getResult = await service.GetByIdAsync(id, token);
-
-                    if (getResult.IsFailure || getResult.Value is null)
-                    {
-                        return getResult.Error!.ToProblem(
-                            title: "Event not found",
-                            statusCode: StatusCodes.Status404NotFound
-                        );
-                    }
-
-                    var appEvent = getResult.Value!;
-
-                    var updatedEvent = request.MapToAppEvent(appEvent);
-
-                    var updateResult = await service.UpdateAsync(updatedEvent, token);
-
-                    if (updateResult.IsFailure)
-                    {
-                        var error = updateResult.Error!;
-                        return error.Code switch
+                    var result = await service.GetByIdAsync(id, token)
+                        .AndThen(appEvent =>
                         {
-                            Errors.AppEvents.UpdateFailedErrorCode =>
-                                error.ToProblem(
-                                    title: "Update Failed",
-                                    statusCode: StatusCodes.Status500InternalServerError),
-                            // Errors.AppEvents.DuplicateTitleErrorCode or Errors.AppEvents.DuplicateSlugErrorCode or Errors.AppEvents.DuplicateErrorCode =>
-                            //     error.ToProblem(
-                            //         title: "Conflict",
-                            //         statusCode: StatusCodes.Status409Conflict),
-                            // Errors.AppEvents.InvalidGroupReferenceErrorCode or Errors.AppEvents.InvalidUserReferenceErrorCode =>
-                            //     error.ToProblem(
-                            //         title: "Bad Request",
-                            //         statusCode: StatusCodes.Status400BadRequest),
-                            _ =>
-                                error.ToProblem(
-                                    title: "Unexpected Error",
-                                    statusCode: StatusCodes.Status500InternalServerError)
-                        };
-                    }
+                            var eventToUpdate = request.MapToAppEvent(appEvent!);
+                            return service.UpdateAsync(eventToUpdate, token);
+                        });
 
-                    var response = updatedEvent.MapToResponse();
-                    return TypedResults.Ok(response);
+                    return result.Match(
+                        onSuccess: updatedEvent => TypedResults.Ok(updatedEvent.MapToResponse()),
+                        onFailure: error => error.ToProblem()
+                    );                
                 })
                 .WithName(Name);
         return app;

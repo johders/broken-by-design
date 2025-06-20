@@ -1,3 +1,4 @@
+using RendezVoulns.Api.Mapping;
 using RendezVoulns.Application.Services.Interfaces;
 
 namespace RendezVoulns.Api.Endpoints.AppEvents;
@@ -12,26 +13,13 @@ public static class DeleteAppEventEndpoint
             Guid id, IAppEventService service,
             CancellationToken token) =>
             {
-                var getResult = await service.GetByIdAsync(id, token);
+                var result = await service.GetByIdAsync(id, token)
+                    .AndThen(appEvent => service.SoftDeleteAsync(appEvent!.Id, DateTimeOffset.UtcNow, token));
 
-                if (getResult.IsFailure)
-                {
-                    return getResult.Error!.ToProblem(
-                        title: "Not Found",
-                        statusCode: StatusCodes.Status404NotFound);
-                }
-
-                var deleteResult = await service.SoftDeleteAsync(id, DateTimeOffset.UtcNow, token);
-
-                if (deleteResult.IsFailure)
-                {
-                    return deleteResult.Error!.ToProblem(
-                        title: "Delete Failed",
-                        statusCode: StatusCodes.Status500InternalServerError
-                    );
-                }
-
-                return TypedResults.Ok();
+                return result.Match(
+                    onSuccess: () => TypedResults.Ok(),
+                    onFailure: error => error.ToProblem()
+                );
             })
             .WithName(Name);
         return app;

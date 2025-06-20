@@ -17,6 +17,9 @@ public class Result
 
     public static Result Success() => new(true);
     public static Result Failure(Error error) => new(false, error);
+
+    public TResult Match<TResult>(Func<TResult> onSuccess, Func<Error, TResult> onFailure)
+        => IsSuccess ? onSuccess() : onFailure(Error!);
 }
 
 public class Result<T> : Result
@@ -37,5 +40,5 @@ public class Result<T> : Result
     public static new Result<T> Failure(Error error) => new(error);
 
     public TResult Match<TResult>(Func<T, TResult> onSuccess, Func<Error, TResult> onFailure)
-        => IsSuccess && Value is not null ? onSuccess(Value) : onFailure(Error!);
+        => IsSuccess ? onSuccess(Value!) : onFailure(Error!);
 }

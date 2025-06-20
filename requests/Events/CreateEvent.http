@@ -3,7 +3,7 @@ Content-Type: application/json
 
 {
     "groupId": "00000000-0000-0000-0000-000000000101",
-    "title": "Cooler tech stuffre",
+    "title": "Cooler things",
     "description": "An annual conference focusing on the latest trends in technology and software development.",
     "location": "De grd, Belgium",
     "startTime": "2025-06-15T07:00:00Z",

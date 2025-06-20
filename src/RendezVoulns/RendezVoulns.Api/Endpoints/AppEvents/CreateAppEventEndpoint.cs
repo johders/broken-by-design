@@ -18,7 +18,7 @@ public static class CreateAppEventEndpoint
                     var result = await service.CreateAsync(appEvent, token);
 
                     if (result.IsFailure)
-                        return result.Error!.ToProblemDetails();
+                        return result.Error!.ToProblem();
 
                     var response = appEvent.MapToResponse();
                     return TypedResults.CreatedAtRoute(response, GetAppEventEndpoint.Name, new {idOrSlug = appEvent.Slug});

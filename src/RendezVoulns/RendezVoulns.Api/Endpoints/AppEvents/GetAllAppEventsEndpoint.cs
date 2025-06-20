@@ -14,16 +14,10 @@ public static class GetAllAppEventEndpoint
                 {
                     var result = await service.GetAllAsync(token);
 
-                    if (result.IsFailure)
-                    {
-                        return result.Error!.ToProblem(
-                            title: "Could not retrieve events",
-                            statusCode: StatusCodes.Status500InternalServerError);
-                    }
-
-                    var response = result.Value!.MapToResponse();
-
-                    return TypedResults.Ok(response);
+                    return result.Match(
+                        onSuccess: events => TypedResults.Ok(events.MapToResponse()),
+                        onFailure: error => error.ToProblem()
+                    );
                 })
                 .WithName(Name);
         return app;

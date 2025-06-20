@@ -1,9 +1,9 @@
-PUT http://localhost:5006/api/events/1448b84f-1489-4acd-9035-4c20ee3ab299
+PUT http://localhost:5006/api/events/0fefaa25-58c6-430a-b659-0c11a52dad5c
 Content-Type: application/json
 
 {
     "groupId": "00000000-0000-0000-0000-000000000105",
-    "title": "Tech for dummies",
+    "title": "Cybersecurity Meetup: Staying Safe Online",
     "description": "An conference with snacks and talks about latest trends in technology and software development.",
     "location": "Malaga, Spain",
     "startTime": "2025-09-19T07:00:00Z",
