@@ -46,6 +46,20 @@ public static class Errors
         public static readonly Error DeleteFailedError = new(DeleteFailedErrorCode, "The group could not be deleted.");
     }
 
+    public static class Tags
+    {
+        private const string Domain = nameof(Tag);
+        public const string DuplicateNameErrorCode = $"{Domain}.{Duplicate}{Name}";
+        public const string CreateFailedErrorCode = $"{Domain}.{CreateFailed}";
+        public const string UpdateFailedErrorCode = $"{Domain}.{UpdateFailed}";
+        public const string DeleteFailedErrorCode = $"{Domain}.{DeleteFailed}";
+        public const string NotFoundErrorCode = $"{Domain}.{NotFound}";
+        public static readonly Error NotFoundError = new(NotFoundErrorCode, "Tag not found.");
+        public static readonly Error CreateFailedError = new(CreateFailedErrorCode, "The tag could not be created.");
+        public static readonly Error UpdateFailedError = new(UpdateFailedErrorCode, "The tag could not be updated.");
+        public static readonly Error DeleteFailedError = new(DeleteFailedErrorCode, "The tag could not be deleted.");
+    }
+
     public static class Users
     {
         private const string DuplicateCode = "Users.Duplicate";
@@ -53,17 +67,5 @@ public static class Errors
         public static readonly Error DuplicateEmail = new(DuplicateCode, "A user with this email already exists.");
         public static readonly Error DuplicateSlug = new(DuplicateCode, "A user with this slug already exists.");
         public static readonly Error NotFound = new("Users.NotFound", "User not found.");
-    }
-
-    public static class Tags
-    {
-        public static readonly Error Duplicate = new("Tags.Duplicate", "A tag with this name already exists.");
-        public static readonly Error NotFound = new("Tags.NotFound", "Tag not found.");
-    }
-
-    public static class General
-    {
-        public static readonly Error None = Error.None;
-        public static readonly Error Unexpected = new("General.Unexpected", "An unexpected error occurred.");
     }
 }

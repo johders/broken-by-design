@@ -1,21 +1,22 @@
 using RendezVoulns.Api.Mapping;
-using RendezVoulns.Application.Repositories.Interfaces;
+using RendezVoulns.Application.Services.Interfaces;
 
 namespace RendezVoulns.Api.Endpoints.Tags;
 
 public static class GetAllTagsEndpoint
 {
-    public const string Name = "GetTags";
+    private const string Name = "GetTags";
 
     public static IEndpointRouteBuilder MapGetAllTags(this IEndpointRouteBuilder app)
     {
         app.MapGet(ApiEndpoints.Tags.GetAll, async (
-            ITagRepository repository, CancellationToken token) =>
+            ITagService service, CancellationToken token) =>
                 {
-                    var tags = await repository.GetAllAsync(token);
+                    var result = await service.GetAllAsync(token);
 
-                    var response = tags.MapToResponse();
-                    return TypedResults.Ok(response);
+                    return result.Match(
+                        onSuccess: tags => TypedResults.Ok(tags.MapToResponse()),
+                        onFailure: error => error.ToProblem());
                 })
                 .WithName(Name);
         return app;

@@ -1,5 +1,5 @@
 using RendezVoulns.Api.Mapping;
-using RendezVoulns.Application.Repositories.Interfaces;
+using RendezVoulns.Application.Services.Interfaces;
 
 namespace RendezVoulns.Api.Endpoints.Tags;
 
@@ -10,15 +10,13 @@ public static class GetTagEndpoint
     public static IEndpointRouteBuilder MapGetTag(this IEndpointRouteBuilder app)
     {
         app.MapGet(ApiEndpoints.Tags.Get, async (
-            Guid id, ITagRepository repository, CancellationToken token) =>
+            Guid id, ITagService service, CancellationToken token) =>
                 {
-                    var tag = await repository.GetByIdAsync(id, token);
+                    var result = await service.GetByIdAsync(id, token);
 
-                    if (tag is null)
-                        return Results.NotFound();
-
-                    var response = tag.MapToResponse();
-                    return TypedResults.Ok(response);
+                    return result.Match(
+                        onSuccess: tag => TypedResults.Ok(tag!.MapToResponse()),
+                        onFailure: error => error.ToProblem());
                 })
                 .WithName(Name);
         return app;

@@ -11,9 +11,14 @@ public static class Messages
         public const string InvalidUser = "Invalid user reference";
         public const string InvalidReference = "Invalid reference";
     }
-    
+
     public static class Groups
     {
-        public const string DuplicateName ="A group with this name already exists";
+        public const string DuplicateName = "A group with this name already exists";
+    }
+    
+    public static class Tags
+    {
+        public const string DuplicateName ="A tag with this name already exists";
     }
 }

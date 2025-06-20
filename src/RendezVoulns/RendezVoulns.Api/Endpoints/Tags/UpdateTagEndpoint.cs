@@ -1,29 +1,29 @@
 using RendezVoulns.Api.Mapping;
-using RendezVoulns.Application.Repositories.Interfaces;
+using RendezVoulns.Application.Services.Interfaces;
 using RendezVoulns.Contracts.V1.Tag.Requests;
 
 namespace RendezVoulns.Api.Endpoints.Tags;
 
 public static class UpdateTagEndpoint
 {
-    public const string Name = "UpdateTag";
+    private const string Name = "UpdateTag";
 
     public static IEndpointRouteBuilder MapUpdateTag(this IEndpointRouteBuilder app)
     {
         app.MapPut(ApiEndpoints.Tags.Update, async (
             Guid id, UpdateTagRequest request,
-            ITagRepository repository, CancellationToken token) =>
+            ITagService service, CancellationToken token) =>
                 {
-                    var tag = await repository.GetByIdAsync(id, token);
+                    var result = await service.GetByIdAsync(id, token)
+                        .AndThen(tag =>
+                        {
+                            var tagToUpdate = request.MapToTag(tag!);
+                            return service.UpdateAsync(tagToUpdate, token);
+                        });
 
-                    if (tag is null)
-                        return Results.NotFound();
-
-                    var updatedTag = request.MapToTag(tag);
-                    await repository.UpdateAsync(updatedTag, token);
-
-                    var response = updatedTag.MapToResponse();
-                    return TypedResults.Ok(response);
+                    return result.Match(
+                        onSuccess: updatedTag => TypedResults.Ok(updatedTag.MapToResponse()),
+                        onFailure: error => error.ToProblem());      
                 })
                 .WithName(Name);
         return app;

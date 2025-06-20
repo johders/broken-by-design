@@ -1,5 +1,6 @@
 using Dapper;
 using Npgsql;
+using RendezVoulns.Application.Common.Errors;
 using RendezVoulns.Application.Common.Exceptions;
 using RendezVoulns.Application.Models.Entities;
 using RendezVoulns.Application.Persistence.Database;
@@ -29,7 +30,7 @@ public class TagRepository(IDbConnectionFactory dbConnectionFactory) : ITagRepos
         }
         catch (PostgresException ex) when (ex.SqlState == Npgsql.PostgresErrorCodes.UniqueViolation)
         {
-            throw new DuplicateException("TEMP", "A tag with this name already exists");
+            throw new DuplicateException(Errors.Tags.DuplicateNameErrorCode, Messages.Tags.DuplicateName);
         }
     }
 
@@ -79,7 +80,7 @@ public class TagRepository(IDbConnectionFactory dbConnectionFactory) : ITagRepos
         }
         catch (PostgresException ex) when (ex.SqlState == Npgsql.PostgresErrorCodes.UniqueViolation)
         {
-            throw new DuplicateException("TEMP", "A tag with this name already exists");
+            throw new DuplicateException(Errors.Tags.DuplicateNameErrorCode, Messages.Tags.DuplicateName);
         }
     }
 
