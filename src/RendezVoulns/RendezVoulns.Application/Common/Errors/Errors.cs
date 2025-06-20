@@ -7,6 +7,8 @@ public static class Errors
     public const string Invalid = "Invalid";
     public const string Slug = "Slug";
     public const string Name = "Name";
+    public const string Username = "Username";
+    public const string Email = "Email";
     public const string Title = "Title";
     public const string NotFound = "NotFound";
     public const string CreateFailed = "CreateFailed";
@@ -62,10 +64,18 @@ public static class Errors
 
     public static class Users
     {
-        private const string DuplicateCode = "Users.Duplicate";
-        public static readonly Error DuplicateUsername = new(DuplicateCode, "A user with this username already exists.");
-        public static readonly Error DuplicateEmail = new(DuplicateCode, "A user with this email already exists.");
-        public static readonly Error DuplicateSlug = new(DuplicateCode, "A user with this slug already exists.");
-        public static readonly Error NotFound = new("Users.NotFound", "User not found.");
+        private const string Domain = nameof(User);
+        public const string DuplicateErrorCode = $"{Domain}.{Duplicate}";
+        public const string DuplicateSlugErrorCode = $"{Domain}.{Duplicate}{Slug}";
+        public const string DuplicateUsernameErrorCode = $"{Domain}.{Duplicate}{Username}";
+        public const string DuplicateEmailErrorCode = $"{Domain}.{Duplicate}{Email}";
+        public const string CreateFailedErrorCode = $"{Domain}.{CreateFailed}";
+        public const string UpdateFailedErrorCode = $"{Domain}.{UpdateFailed}";
+        public const string DeleteFailedErrorCode = $"{Domain}.{DeleteFailed}";
+        public const string NotFoundErrorCode = $"{Domain}.{NotFound}";
+        public static readonly Error NotFoundError = new(NotFoundErrorCode, "User not found.");
+        public static readonly Error CreateFailedError = new(CreateFailedErrorCode, "The user could not be created.");
+        public static readonly Error UpdateFailedError = new(UpdateFailedErrorCode, "The user could not be updated.");
+        public static readonly Error DeleteFailedError = new(DeleteFailedErrorCode, "The user could not be deleted.");
     }
 }

@@ -16,9 +16,17 @@ public static class Messages
     {
         public const string DuplicateName = "A group with this name already exists";
     }
-    
+
     public static class Tags
     {
-        public const string DuplicateName ="A tag with this name already exists";
+        public const string DuplicateName = "A tag with this name already exists";
+    }
+
+    public static class Users
+    {
+        public const string Duplicate = "A user with these details already exists.";
+        public const string DuplicateSlug = "A user with this slug already exists";
+        public const string DuplicateUsername = "A user with this username already exists";
+        public const string DuplicateEmail = "A user with this email already exists";
     }
 }

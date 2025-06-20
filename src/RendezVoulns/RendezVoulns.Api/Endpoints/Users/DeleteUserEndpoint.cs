@@ -1,27 +1,24 @@
-using RendezVoulns.Application.Repositories.Interfaces;
+using RendezVoulns.Api.Mapping;
+using RendezVoulns.Application.Services.Interfaces;
 
 namespace RendezVoulns.Api.Endpoints.Users;
 
 public static class DeleteUserEndpoint
 {
-    public const string Name = "DeleteUser";
+    private const string Name = "DeleteUser";
 
     public static IEndpointRouteBuilder MapDeleteUser(this IEndpointRouteBuilder app)
     {
         app.MapDelete(ApiEndpoints.Users.Delete, async (
-            Guid id, IUserRepository repository,
+            Guid id, IUserService service,
             CancellationToken token) =>
             {
-                var user = await repository.GetByIdAsync(id, token);
+                var result = await service.GetByIdAsync(id, token)
+                    .AndThen(user => service.SoftDeleteAsync(user!.Id, DateTimeOffset.UtcNow, token));
 
-                if (user is null)
-                    return Results.NotFound();
-
-                bool deleted = await repository.SoftDeleteAsync(id, DateTimeOffset.UtcNow, token);
-
-                return deleted
-                ? TypedResults.Ok()
-                : Results.StatusCode(StatusCodes.Status500InternalServerError);
+                return result.Match(
+                    onSuccess: () => TypedResults.Ok(),
+                    onFailure: error => error.ToProblem());
             })
             .WithName(Name);
         return app;

@@ -18,7 +18,7 @@ public static partial class ErrorMapping
             Errors.Tags.UpdateFailedErrorCode or
             Errors.Tags.DeleteFailedErrorCode => (StatusCodes.Status409Conflict, Conflict),
 
-            _ => (StatusCodes.Status500InternalServerError, $"{nameof(Group)}: {Unexpected}")
+            _ => (StatusCodes.Status500InternalServerError, $"{nameof(Tag)}: {Unexpected}")
         };
 
         return CreateProblemResult(statusCode, title, error);

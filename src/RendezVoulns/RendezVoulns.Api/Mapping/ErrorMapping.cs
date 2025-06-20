@@ -18,7 +18,7 @@ public static partial class ErrorMapping
             nameof(AppEvent) => MapAppEventErrors(error),
             nameof(Group) => MappGroupErrors(error),
             nameof(Tag) => MappTagErrors(error),
-            // nameof(User) => MappUserErrors(error),
+            nameof(User) => MapUserErrors(error),
             _ => CreateProblemResult(StatusCodes.Status500InternalServerError, Unexpected, error),
         };
     }

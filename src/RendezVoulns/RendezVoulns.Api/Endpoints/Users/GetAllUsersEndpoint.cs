@@ -1,21 +1,22 @@
 using RendezVoulns.Api.Mapping;
-using RendezVoulns.Application.Repositories.Interfaces;
+using RendezVoulns.Application.Services.Interfaces;
 
 namespace RendezVoulns.Api.Endpoints.Users;
 
 public static class GetAllUsersEndpoint
 {
-    public const string Name = "GetUsers";
+    private const string Name = "GetUsers";
 
     public static IEndpointRouteBuilder MapGetAllUsers(this IEndpointRouteBuilder app)
     {
         app.MapGet(ApiEndpoints.Users.GetAll, async (
-            IUserRepository repository, CancellationToken token) =>
+            IUserService service, CancellationToken token) =>
                 {
-                    var users = await repository.GetAllAsync(token);
+                    var result = await service.GetAllAsync(token);
 
-                    var response = users.MapToResponse();
-                    return TypedResults.Ok(response);
+                    return result.Match(
+                        onSuccess: users => TypedResults.Ok(users.MapToResponse()),
+                        onFailure: error => error.ToProblem());
                 })
                 .WithName(Name);
         return app;

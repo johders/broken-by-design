@@ -1,5 +1,6 @@
 using Dapper;
 using Npgsql;
+using RendezVoulns.Application.Common.Errors;
 using RendezVoulns.Application.Common.Exceptions;
 using RendezVoulns.Application.Models.Entities;
 using RendezVoulns.Application.Persistence.Database;
@@ -32,10 +33,10 @@ public class UserRepository(IDbConnectionFactory dbConnectionFactory) : IUserRep
         {
             throw ex.ConstraintName switch
             {
-                "users_username_active_idx" => new DuplicateException("TEMP", "A user with this username already exists"),
-                "users_email_active_idx" => new DuplicateException("TEMP", "A user with this email already exists"),
-                "users_slug_active_idx" => new DuplicateException("TEMP", "A user with this slug already exists"),
-                _ => new DuplicateException("TEMP", "A user with these details already exists.")
+                "users_username_active_idx" => new DuplicateException(Errors.Users.DuplicateUsernameErrorCode, Messages.Users.DuplicateUsername),
+                "users_email_active_idx" => new DuplicateException(Errors.Users.DuplicateEmailErrorCode, Messages.Users.DuplicateEmail),
+                "users_slug_active_idx" => new DuplicateException(Errors.Users.DuplicateSlugErrorCode, Messages.Users.DuplicateSlug),
+                _ => new DuplicateException(Errors.Users.DuplicateErrorCode, Messages.Users.Duplicate)
             };
         }
     }
@@ -104,10 +105,10 @@ public class UserRepository(IDbConnectionFactory dbConnectionFactory) : IUserRep
         {
             throw ex.ConstraintName switch
             {
-                "users_username_active_idx" => new DuplicateException("TEMP", "A user with this username already exists"),
-                "users_email_active_idx" => new DuplicateException("TEMP", "A user with this email already exists"),
-                "users_slug_active_idx" => new DuplicateException("TEMP", "A user with this slug already exists"),
-                _ => new DuplicateException("TEMP", "A user with these details already exists.")
+                "users_username_active_idx" => new DuplicateException(Errors.Users.DuplicateUsernameErrorCode, Messages.Users.DuplicateUsername),
+                "users_email_active_idx" => new DuplicateException(Errors.Users.DuplicateEmailErrorCode, Messages.Users.DuplicateEmail),
+                "users_slug_active_idx" => new DuplicateException(Errors.Users.DuplicateSlugErrorCode, Messages.Users.DuplicateSlug),
+                _ => new DuplicateException(Errors.Users.DuplicateErrorCode, Messages.Users.Duplicate)
             };
         }
     }

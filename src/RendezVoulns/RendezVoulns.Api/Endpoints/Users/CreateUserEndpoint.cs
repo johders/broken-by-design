@@ -1,23 +1,24 @@
 using RendezVoulns.Api.Mapping;
-using RendezVoulns.Application.Repositories.Interfaces;
+using RendezVoulns.Application.Services.Interfaces;
 using RendezVoulns.Contracts.V1.User.Requests;
 
 namespace RendezVoulns.Api.Endpoints.Users;
 
 public static class CreateUseEndpoint
 {
-    public const string Name = "CreateUser";
+    private const string Name = "CreateUser";
 
     public static IEndpointRouteBuilder MapCreateUser(this IEndpointRouteBuilder app)
     {
         app.MapPost(ApiEndpoints.Users.Create, async (
-            CreateUserRequest request, IUserRepository repository, CancellationToken token) =>
+            CreateUserRequest request, IUserService service, CancellationToken token) =>
                 {
                     var user = request.MapToUser();
-                    await repository.CreateAsync(user, token);
+                    var result = await service.CreateAsync(user, token);
 
-                    var response = user.MapToResponse();
-                    return TypedResults.CreatedAtRoute(response, GetUserEndpoint.Name, new { idOrSlug = user.Slug });
+                    return result.Match(
+                        onSuccess: () => TypedResults.CreatedAtRoute(user.MapToResponse(), GetUserEndpoint.Name, new { idOrSlug = user.Slug }),
+                        onFailure: error => error.ToProblem());
                 })
                 .WithName(Name);
         return app;

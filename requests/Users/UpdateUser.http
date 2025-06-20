@@ -1,8 +1,8 @@
-PUT http://localhost:5006/api/users/4ca38371-1b2f-4fbe-814f-f2bb2bb938ec
+PUT http://localhost:5006/api/users/68d6d458-8b1c-458c-b761-f7a21c882c56
 Content-Type: application/json
 
 {
-    "username": "joseph_martinez",
+    "username": "joseph_W_martinez",
     "email": "jloussd@b9.es",
     "profileImageUrl": "https://images.fb.gov"
 }
