@@ -1,5 +1,5 @@
 using RendezVoulns.Api.Mapping;
-using RendezVoulns.Application.Repositories.Interfaces;
+using RendezVoulns.Application.Services.Interfaces;
 
 namespace RendezVoulns.Api.Endpoints.Groups;
 
@@ -10,15 +10,13 @@ public static class GetGroupEndpoint
     public static IEndpointRouteBuilder MapGetGroup(this IEndpointRouteBuilder app)
     {
         app.MapGet(ApiEndpoints.Groups.Get, async (
-            Guid id, IGroupRepository repository, CancellationToken token) =>
+            Guid id, IGroupService service, CancellationToken token) =>
                 {
-                    var group = await repository.GetByIdAsync(id, token);
+                    var result = await service.GetByIdAsync(id, token);
 
-                    if (group is null)
-                        return Results.NotFound();
-
-                    var response = group.MapToResponse();
-                    return TypedResults.Ok(response);
+                    return result.Match(
+                        onSuccess: group => TypedResults.Ok(group!.MapToResponse()),
+                        onFailure: error => error.ToProblem());
                 })
                 .WithName(Name);
         return app;

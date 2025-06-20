@@ -1,23 +1,24 @@
 using RendezVoulns.Api.Mapping;
-using RendezVoulns.Application.Repositories.Interfaces;
+using RendezVoulns.Application.Services.Interfaces;
 using RendezVoulns.Contracts.V1.Group.Requests;
 
 namespace RendezVoulns.Api.Endpoints.Groups;
 
 public static class CreateGroupEndpoint
 {
-    public const string Name = "CreateGroup";
+    private const string Name = "CreateGroup";
 
     public static IEndpointRouteBuilder MapCreateGroup(this IEndpointRouteBuilder app)
     {
         app.MapPost(ApiEndpoints.Groups.Create, async (
-            CreateGroupRequest request, IGroupRepository repository, CancellationToken token) =>
+            CreateGroupRequest request, IGroupService service, CancellationToken token) =>
                 {
                     var group = request.MapToGroup();
-                    await repository.CreateAsync(group, token);
+                    var result = await service.CreateAsync(group, token);
 
-                    var response = group.MapToResponse();
-                    return TypedResults.CreatedAtRoute(response, GetGroupEndpoint.Name, new { group.Id });
+                    return result.Match(
+                        onSuccess: () => TypedResults.CreatedAtRoute(group.MapToResponse(), GetGroupEndpoint.Name, new { group.Id }),
+                        onFailure: error => error.ToProblem());
                 })
                 .WithName(Name);
         return app;

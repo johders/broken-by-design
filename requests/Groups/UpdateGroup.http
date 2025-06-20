@@ -1,4 +1,4 @@
-PUT http://localhost:5006/api/groups/e60d8f08-6c98-4afe-a635-a47b01da7450
+PUT http://localhost:5006/api/groups/1ed63b42-e002-49ca-a747-17b6e978ab7a
 Content-Type: application/json
 
 {

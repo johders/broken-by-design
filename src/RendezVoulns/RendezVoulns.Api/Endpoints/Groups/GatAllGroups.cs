@@ -1,21 +1,22 @@
 using RendezVoulns.Api.Mapping;
-using RendezVoulns.Application.Repositories.Interfaces;
+using RendezVoulns.Application.Services.Interfaces;
 
 namespace RendezVoulns.Api.Endpoints.Groups;
 
 public static class GetAllGroupsEndpoint
 {
-    public const string Name = "GetGroups";
+    private const string Name = "GetGroups";
 
     public static IEndpointRouteBuilder MapGetAllGroups(this IEndpointRouteBuilder app)
     {
         app.MapGet(ApiEndpoints.Groups.GetAll, async (
-            IGroupRepository repository, CancellationToken token) =>
+            IGroupService service, CancellationToken token) =>
                 {
-                    var groups = await repository.GetAllAsync(token);
+                    var result = await service.GetAllAsync(token);
 
-                    var response = groups.MapToResponse();
-                    return TypedResults.Ok(response);
+                    return result.Match(
+                        onSuccess: groups => TypedResults.Ok(groups.MapToResponse()),
+                        onFailure: error => error.ToProblem());
                 })
                 .WithName(Name);
         return app;

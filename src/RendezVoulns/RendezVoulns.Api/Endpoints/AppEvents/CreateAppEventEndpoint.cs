@@ -6,7 +6,7 @@ namespace RendezVoulns.Api.Endpoints.AppEvents;
 
 public static class CreateAppEventEndpoint
 {
-    public const string Name = "CreateAppEvent";
+    private const string Name = "CreateAppEvent";
 
     public static IEndpointRouteBuilder MapCreateAppEvent(this IEndpointRouteBuilder app)
     {
@@ -17,11 +17,9 @@ public static class CreateAppEventEndpoint
                     var appEvent = request.MapToAppEvent();
                     var result = await service.CreateAsync(appEvent, token);
 
-                    if (result.IsFailure)
-                        return result.Error!.ToProblem();
-
-                    var response = appEvent.MapToResponse();
-                    return TypedResults.CreatedAtRoute(response, GetAppEventEndpoint.Name, new {idOrSlug = appEvent.Slug});
+                    return result.Match(
+                        onSuccess: () => TypedResults.CreatedAtRoute(appEvent.MapToResponse(), GetAppEventEndpoint.Name, new { idOrSlug = appEvent.Slug }),
+                        onFailure: error => error.ToProblem());
                 })
                 .WithName(Name);
         return app;

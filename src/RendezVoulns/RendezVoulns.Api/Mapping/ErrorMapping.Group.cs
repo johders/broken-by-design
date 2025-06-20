@@ -6,7 +6,7 @@ namespace RendezVoulns.Api.Mapping;
 
 public static partial class ErrorMapping
 {
-    private static ProblemHttpResult MapGroupErrors(Error error)
+    private static ProblemHttpResult MappGroupErrors(Error error)
     {
         var (statusCode, title) = error.Code switch
         {

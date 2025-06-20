@@ -19,8 +19,7 @@ public static class GetAppEventEndpoint
 
                     return result.Match(
                         onSuccess: appEvent => TypedResults.Ok(appEvent!.MapToResponse()),
-                        onFailure: error => error.ToProblem()
-                    );
+                        onFailure: error => error.ToProblem());
                 })
                 .WithName(Name);
         return app;

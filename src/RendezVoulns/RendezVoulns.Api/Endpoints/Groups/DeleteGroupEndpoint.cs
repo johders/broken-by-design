@@ -1,27 +1,25 @@
-using RendezVoulns.Application.Repositories.Interfaces;
+using RendezVoulns.Api.Mapping;
+using RendezVoulns.Application.Services.Interfaces;
 
 namespace RendezVoulns.Api.Endpoints.Groups;
 
 public static class DeleteGroupEndpoint
 {
-    public const string Name = "DeleteGroup";
+    private const string Name = "DeleteGroup";
 
     public static IEndpointRouteBuilder MapDeleteGroup(this IEndpointRouteBuilder app)
     {
         app.MapDelete(ApiEndpoints.Groups.Delete, async (
-            Guid id, IGroupRepository repository,
+            Guid id, IGroupService service,
             CancellationToken token) =>
             {
-                var group = await repository.GetByIdAsync(id, token);
+                var result = await service.GetByIdAsync(id, token)
+                    .AndThen(group => service.SoftDeleteAsync(group!.Id, DateTimeOffset.UtcNow, token));
 
-                if (group is null)
-                    return Results.NotFound();
-
-                bool deleted = await repository.SoftDeleteAsync(id, DateTimeOffset.UtcNow, token);
-
-                return deleted
-                ? TypedResults.Ok()
-                : Results.StatusCode(StatusCodes.Status500InternalServerError);
+                return result.Match(
+                    onSuccess: () => TypedResults.Ok(),
+                    onFailure: error => error.ToProblem()
+                );
             })
             .WithName(Name);
         return app;

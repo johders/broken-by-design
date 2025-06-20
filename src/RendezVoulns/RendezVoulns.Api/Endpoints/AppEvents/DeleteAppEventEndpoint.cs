@@ -5,7 +5,7 @@ namespace RendezVoulns.Api.Endpoints.AppEvents;
 
 public static class DeleteAppEventEndpoint
 {
-    public const string Name = "DeleteAppEvent";
+    private const string Name = "DeleteAppEvent";
 
     public static IEndpointRouteBuilder MapDeleteAppEvent(this IEndpointRouteBuilder app)
     {
@@ -18,8 +18,7 @@ public static class DeleteAppEventEndpoint
 
                 return result.Match(
                     onSuccess: () => TypedResults.Ok(),
-                    onFailure: error => error.ToProblem()
-                );
+                    onFailure: error => error.ToProblem());
             })
             .WithName(Name);
         return app;

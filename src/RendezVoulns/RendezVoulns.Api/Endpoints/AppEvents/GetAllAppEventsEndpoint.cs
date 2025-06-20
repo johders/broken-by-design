@@ -5,7 +5,7 @@ namespace RendezVoulns.Api.Endpoints.AppEvents;
 
 public static class GetAllAppEventEndpoint
 {
-    public const string Name = "GetAppEvents";
+    private const string Name = "GetAppEvents";
 
     public static IEndpointRouteBuilder MapGetAllAppEvents(this IEndpointRouteBuilder app)
     {
@@ -16,8 +16,7 @@ public static class GetAllAppEventEndpoint
 
                     return result.Match(
                         onSuccess: events => TypedResults.Ok(events.MapToResponse()),
-                        onFailure: error => error.ToProblem()
-                    );
+                        onFailure: error => error.ToProblem());
                 })
                 .WithName(Name);
         return app;

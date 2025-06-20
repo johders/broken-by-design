@@ -16,7 +16,7 @@ public static partial class ErrorMapping
         return error.Domain switch
         {
             nameof(AppEvent) => MapAppEventErrors(error),
-            // nameof(Group) => MappGroupErrors(error),
+            nameof(Group) => MappGroupErrors(error),
             // nameof(Tag) => MappTagErrors(error),
             // nameof(User) => MappUserErrors(error),
             _ => CreateProblemResult(StatusCodes.Status500InternalServerError, Unexpected, error),

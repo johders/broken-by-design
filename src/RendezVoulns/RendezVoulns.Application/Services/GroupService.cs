@@ -40,7 +40,7 @@ public class GroupService(IGroupRepository groupRepository) : IGroupService
         return Result<IEnumerable<Group>>.Success(groups);
     }
 
-    public async Task<Result> UpdateAsync(Group group, CancellationToken token = default)
+    public async Task<Result<Group>> UpdateAsync(Group group, CancellationToken token = default)
     {
         try
         {
