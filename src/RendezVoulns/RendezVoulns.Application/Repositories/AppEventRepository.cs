@@ -50,35 +50,36 @@ public class AppEventRepository(IDbConnectionFactory dbConnectionFactory) : IApp
     {
         using var connection = await _dbConnectionFactory.CreateConnectionAsync();
 
-        var eventSql = """
-                SELECT id, group_id AS GroupId, title, slug, description, location, start_time AS StartTime, end_time AS EndTime, created_by_user_id AS CreatedByUserId, created_on AS CreatedOn FROM events
-                WHERE id = @Id
-                AND deleted_on IS NULL;
-                """;
+        var sql = """
+            SELECT id, group_id AS GroupId, title, slug, description, location, start_time AS StartTime, end_time AS EndTime, created_by_user_id AS CreatedByUserId, created_on AS CreatedOn 
+            FROM events
+            WHERE id = @Id 
+            AND deleted_on IS NULL;
 
-        var appEvent = await connection.QueryFirstOrDefaultAsync<AppEvent>(new CommandDefinition(eventSql, new { Id = id }, cancellationToken: token));
+            SELECT t.id, t.name, t.color_hex AS ColorHex, t.created_on AS CreatedOn
+            FROM event_tags et
+            INNER JOIN tags t ON et.tag_id = t.id
+            WHERE et.event_id = @Id 
+            AND t.deleted_on IS NULL;
 
-        if (appEvent is null) return appEvent;
+            SELECT user_id AS UserId, event_id AS EventId, status, responded_on AS RespondedOn
+            FROM rsvps
+            WHERE event_id = @Id 
+            AND deleted_on IS NULL;
+            """;
 
-        var tagsSql = """
-                SELECT t.id, t.name, t.color_hex AS ColorHex, t.created_on AS CreatedOn
-                FROM tags t
-                INNER JOIN event_tags et ON et.tag_id = t.id
-                WHERE et.event_id = @Id AND t.deleted_on IS NULL;
-                """;
-        
-        var rsvpSql = """
-                SELECT user_id AS UserId, event_id AS EventId, status, responded_on AS RespondedOn
-                FROM rsvps
-                WHERE event_id = @Id AND deleted_on IS NULL;
-                """;
+        using var multi = await connection.QueryMultipleAsync(new CommandDefinition(sql, new { Id = id }, cancellationToken: token));
 
-        var tags = await connection.QueryAsync<Tag>(new CommandDefinition(tagsSql, new { Id = id }, cancellationToken: token));
+        var appEvent = await multi.ReadFirstOrDefaultAsync<AppEvent>();
 
-        var rsvps = await connection.QueryAsync<Rsvp>(new CommandDefinition(rsvpSql, new { Id = id }, cancellationToken: token));
+        if (appEvent is null)
+            return null;
 
-        appEvent.Tags = [.. tags];
-        appEvent.Rsvps = [.. rsvps];
+        var tags = await multi.ReadAsync<Tag>();
+        var rsvps = await multi.ReadAsync<Rsvp>();
+
+        appEvent.Tags = tags;
+        appEvent.Rsvps = rsvps;
 
         return appEvent;
     }
@@ -88,12 +89,34 @@ public class AppEventRepository(IDbConnectionFactory dbConnectionFactory) : IApp
         using var connection = await _dbConnectionFactory.CreateConnectionAsync();
 
         var sql = """
-                SELECT id, group_id AS GroupId, title, slug, description, location, start_time AS StartTime, end_time AS EndTime, created_by_user_id AS CreatedByUserId, created_on AS CreatedOn FROM events
+                SELECT id, group_id AS GroupId, title, slug, description, location, start_time AS StartTime, end_time AS EndTime, created_by_user_id AS CreatedByUserId, created_on AS CreatedOn 
+                FROM events
                 WHERE slug = @Slug
                 AND deleted_on IS NULL;
                 """;
 
         var appEvent = await connection.QueryFirstOrDefaultAsync<AppEvent>(new CommandDefinition(sql, new { Slug = slug }, cancellationToken: token));
+
+        if (appEvent is null)
+            return null;
+
+        var relatedSql = """
+                SELECT t.id, t.name, t.color_hex AS ColorHex, t.created_on AS CreatedOn
+                FROM event_tags et
+                INNER JOIN tags t ON et.tag_id = t.id
+                WHERE et.event_id = @EventId 
+                AND t.deleted_on IS NULL;
+
+                SELECT user_id AS UserId, event_id AS EventId, status, responded_on AS RespondedOn
+                FROM rsvps
+                WHERE event_id = @EventId 
+                AND deleted_on IS NULL;
+                """;
+                
+        using var multi = await connection.QueryMultipleAsync(new CommandDefinition(relatedSql, new { EventId = appEvent.Id }, cancellationToken: token));
+
+        appEvent.Tags = await multi.ReadAsync<Tag>();
+        appEvent.Rsvps = await multi.ReadAsync<Rsvp>();
 
         return appEvent;
     }
