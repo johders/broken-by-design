@@ -1,3 +1,6 @@
+using RendezVoulns.Contracts.V1.Rsvp.Responses;
+using RendezVoulns.Contracts.V1.Tag.Responses;
+
 namespace RendezVoulns.Contracts.V1.AppEvent.Responses;
 
 public class AppEventResponse
@@ -12,4 +15,6 @@ public class AppEventResponse
     public DateTimeOffset EndTime { get; init; }
     public Guid CreatedByUserId { get; init; }
     public DateTimeOffset CreatedOn { get; init; }
+    public IEnumerable<TagResponse> Tags { get; set; } = [];
+    public IEnumerable<RsvpResponse> Rsvps { get; set; } = [];
 }

@@ -7,6 +7,7 @@ using RendezVoulns.Contracts.V1.Group.Requests;
 using RendezVoulns.Contracts.V1.Group.Responses;
 using RendezVoulns.Contracts.V1.User.Requests;
 using RendezVoulns.Contracts.V1.User.Responses;
+using RendezVoulns.Contracts.V1.Rsvp.Responses;
 
 namespace RendezVoulns.Api.Mapping;
 
@@ -56,7 +57,9 @@ public static class ContractMapping
             StartTime = appEvent.StartTime,
             EndTime = appEvent.EndTime,
             CreatedByUserId = appEvent.CreatedByUserId,
-            CreatedOn = appEvent.CreatedOn
+            CreatedOn = appEvent.CreatedOn,
+            Tags = appEvent.Tags.Select(t => t.MapToResponse()),
+            Rsvps = appEvent.Rsvps.Select(r => r.MapToResponse())
         };
     }
 
@@ -146,7 +149,7 @@ public static class ContractMapping
         };
     }
 
-        public static User MapToUser(this CreateUserRequest request)
+    public static User MapToUser(this CreateUserRequest request)
     {
         return new User
         {
@@ -185,6 +188,17 @@ public static class ContractMapping
         return new UsersResponse
         {
             Items = users.Select(u => u.MapToResponse())
+        };
+    }
+    
+    public static RsvpResponse MapToResponse(this Rsvp rsvp)
+    {
+        return new RsvpResponse
+        {
+            UserId = rsvp.UserId,
+            EventId = rsvp.EventId,
+            Status = rsvp.Status.ToString(),
+            RespondedOn = rsvp.RespondedOn
         };
     }
 }

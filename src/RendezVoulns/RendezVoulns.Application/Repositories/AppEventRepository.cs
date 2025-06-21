@@ -50,13 +50,35 @@ public class AppEventRepository(IDbConnectionFactory dbConnectionFactory) : IApp
     {
         using var connection = await _dbConnectionFactory.CreateConnectionAsync();
 
-        var sql = """
+        var eventSql = """
                 SELECT id, group_id AS GroupId, title, slug, description, location, start_time AS StartTime, end_time AS EndTime, created_by_user_id AS CreatedByUserId, created_on AS CreatedOn FROM events
                 WHERE id = @Id
                 AND deleted_on IS NULL;
                 """;
 
-        var appEvent = await connection.QueryFirstOrDefaultAsync<AppEvent>(new CommandDefinition(sql, new { Id = id }, cancellationToken: token));
+        var appEvent = await connection.QueryFirstOrDefaultAsync<AppEvent>(new CommandDefinition(eventSql, new { Id = id }, cancellationToken: token));
+
+        if (appEvent is null) return appEvent;
+
+        var tagsSql = """
+                SELECT t.id, t.name, t.color_hex AS ColorHex, t.created_on AS CreatedOn
+                FROM tags t
+                INNER JOIN event_tags et ON et.tag_id = t.id
+                WHERE et.event_id = @Id AND t.deleted_on IS NULL;
+                """;
+        
+        var rsvpSql = """
+                SELECT user_id AS UserId, event_id AS EventId, status, responded_on AS RespondedOn
+                FROM rsvps
+                WHERE event_id = @Id AND deleted_on IS NULL;
+                """;
+
+        var tags = await connection.QueryAsync<Tag>(new CommandDefinition(tagsSql, new { Id = id }, cancellationToken: token));
+
+        var rsvps = await connection.QueryAsync<Rsvp>(new CommandDefinition(rsvpSql, new { Id = id }, cancellationToken: token));
+
+        appEvent.Tags = [.. tags];
+        appEvent.Rsvps = [.. rsvps];
 
         return appEvent;
     }
