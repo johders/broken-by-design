@@ -20,7 +20,6 @@ public static class Errors
         private const string Domain = nameof(AppEvent);
         public const string DuplicateErrorCode = $"{Domain}.{Duplicate}";
         public const string DuplicateSlugErrorCode = $"{Domain}.{Duplicate}{Slug}";
-        public const string DuplicateTitleErrorCode = $"{Domain}.{Duplicate}{Title}";
         public const string InvalidReferenceErrorCode = $"{Domain}.{Invalid}Reference";
         public const string InvalidGroupErrorCode = $"{Domain}.{Invalid}{nameof(Group)}";
         public const string InvalidUserErrorCode = $"{Domain}.{Invalid}{nameof(User)}";

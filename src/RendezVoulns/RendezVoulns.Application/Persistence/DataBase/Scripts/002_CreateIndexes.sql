@@ -1,9 +1,6 @@
 CREATE UNIQUE INDEX CONCURRENTLY IF NOT EXISTS events_slug_active_idx ON events(slug)
 WHERE deleted_on IS NULL;
 
-CREATE UNIQUE INDEX CONCURRENTLY IF NOT EXISTS events_title_active_idx ON events(title)
-WHERE deleted_on IS NULL;
-
 CREATE UNIQUE INDEX CONCURRENTLY IF NOT EXISTS users_username_active_idx ON users(username)
 WHERE deleted_on IS NULL;
 

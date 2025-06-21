@@ -12,7 +12,6 @@ public static partial class ErrorMapping
         {
             Errors.AppEvents.NotFoundErrorCode => (StatusCodes.Status404NotFound, NotFound),
 
-            Errors.AppEvents.DuplicateTitleErrorCode or
             Errors.AppEvents.DuplicateSlugErrorCode or
             Errors.AppEvents.DuplicateErrorCode => (StatusCodes.Status409Conflict, Conflict),
 

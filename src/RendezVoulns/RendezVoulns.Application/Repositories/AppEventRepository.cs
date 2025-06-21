@@ -32,7 +32,6 @@ public class AppEventRepository(IDbConnectionFactory dbConnectionFactory) : IApp
         {
             throw ex.ConstraintName switch
             {
-                "events_title_active_idx" => new DuplicateException(Errors.AppEvents.DuplicateTitleErrorCode, Messages.AppEvents.DuplicateTitle),
                 "events_slug_active_idx" => new DuplicateException(Errors.AppEvents.DuplicateSlugErrorCode, Messages.AppEvents.DuplicateSlug),
                 _ => new DuplicateException(Errors.AppEvents.DuplicateErrorCode, Messages.AppEvents.Duplicate)
             };
@@ -125,7 +124,6 @@ public class AppEventRepository(IDbConnectionFactory dbConnectionFactory) : IApp
         {
             throw ex.ConstraintName switch
             {
-                "events_title_active_idx" => new DuplicateException(Errors.AppEvents.DuplicateTitleErrorCode, Messages.AppEvents.DuplicateTitle),
                 "events_slug_active_idx" => new DuplicateException(Errors.AppEvents.DuplicateSlugErrorCode, Messages.AppEvents.DuplicateSlug),
                 _ => new DuplicateException(Errors.AppEvents.DuplicateErrorCode, Messages.AppEvents.Duplicate)
             };
