@@ -17,8 +17,8 @@ public partial class AppEvent : TrackableEntity
     public required DateTimeOffset EndTime { get; set; }
     public required Guid CreatedByUserId { get; init; }
     public DateTimeOffset CreatedOn { get; init; } = DateTimeOffset.UtcNow;
-    public IEnumerable<Tag> Tags { get; set; } = [];
-    public IEnumerable<Rsvp> Rsvps { get; set; } = [];
+    public ICollection<Tag> Tags { get; set; } = [];
+    public ICollection<Rsvp> Rsvps { get; set; } = [];
 
     private string GenerateSlug()
     {

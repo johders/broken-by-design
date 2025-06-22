@@ -75,11 +75,8 @@ public class AppEventRepository(IDbConnectionFactory dbConnectionFactory) : IApp
         if (appEvent is null)
             return null;
 
-        var tags = await multi.ReadAsync<Tag>();
-        var rsvps = await multi.ReadAsync<Rsvp>();
-
-        appEvent.Tags = tags;
-        appEvent.Rsvps = rsvps;
+        appEvent.Tags = [.. await multi.ReadAsync<Tag>()];
+        appEvent.Rsvps = [.. await multi.ReadAsync<Rsvp>()];
 
         return appEvent;
     }
@@ -115,8 +112,8 @@ public class AppEventRepository(IDbConnectionFactory dbConnectionFactory) : IApp
                 
         using var multi = await connection.QueryMultipleAsync(new CommandDefinition(relatedSql, new { EventId = appEvent.Id }, cancellationToken: token));
 
-        appEvent.Tags = await multi.ReadAsync<Tag>();
-        appEvent.Rsvps = await multi.ReadAsync<Rsvp>();
+        appEvent.Tags = [.. await multi.ReadAsync<Tag>()];
+        appEvent.Rsvps = [.. await multi.ReadAsync<Rsvp>()];
 
         return appEvent;
     }
@@ -126,24 +123,43 @@ public class AppEventRepository(IDbConnectionFactory dbConnectionFactory) : IApp
         using var connection = await _dbConnectionFactory.CreateConnectionAsync();
 
         var sql = """
-                SELECT id, group_id AS GroupId, title, slug, description, location, start_time AS StartTime, end_time AS EndTime, created_by_user_id AS CreatedByUserId, created_on AS CreatedOn FROM events
-                WHERE deleted_on IS NULL;
+                SELECT e.id, e.group_id AS GroupId, e.title, e.slug, e.description, e.location, e.start_time AS StartTime, e.end_time AS EndTime, e.created_by_user_id AS CreatedByUserId, e.created_on AS CreatedOn,
+                t.id AS Id, t.name, t.color_hex AS ColorHex, t.created_on AS CreatedOn,
+                r.user_id AS UserId, r.event_id AS EventId, r.status, r.responded_on AS RespondedOn
+                FROM events e
+                LEFT JOIN event_tags et ON e.id = et.event_id
+                LEFT JOIN tags t ON et.tag_id = t.id AND t.deleted_on IS NULL
+                LEFT JOIN rsvps r ON e.id = r.event_id AND r.deleted_on IS NULL
+                WHERE e.deleted_on IS NULL
+                ORDER BY e.id;
                 """;
 
-        var result = await connection.QueryAsync(new CommandDefinition(sql, cancellationToken: token));
+        var eventDictionary = new Dictionary<Guid, AppEvent>();
 
-        return result.Select(e => new AppEvent
-        {
-            Id = e.id,
-            GroupId = e.groupid,
-            Title = e.title,
-            Description = e.description,
-            Location = e.location,
-            StartTime = e.starttime,
-            EndTime = e.endtime,
-            CreatedByUserId = e.createdbyuserid,
-            CreatedOn = e.createdon
-        });
+        var events = await connection.QueryAsync<AppEvent, Tag, Rsvp, AppEvent>(
+            new CommandDefinition(sql, cancellationToken: token),
+                (appEvent, tag, rsvp) =>
+                    {
+                        if (!eventDictionary.TryGetValue(appEvent.Id, out var currentEvent))
+                        {
+                            currentEvent = appEvent;
+                            currentEvent.Tags = new List<Tag>();
+                            currentEvent.Rsvps = new List<Rsvp>();
+                            eventDictionary.Add(currentEvent.Id, currentEvent);
+                        }
+
+                        if (tag is not null && !currentEvent.Tags.Any(t => t.Id == tag.Id))
+                            currentEvent.Tags.Add(tag);
+
+                        if (rsvp is not null && !currentEvent.Rsvps.Any(r => r.UserId == rsvp.UserId))
+                            currentEvent.Rsvps.Add(rsvp);
+
+                        return currentEvent;
+                    },
+                splitOn: "Id,UserId"
+            );
+
+        return eventDictionary.Values;
     }
 
 
