@@ -9,6 +9,7 @@ public static class TagEndpointExtensions{
         app.MapGetAllTags();
         app.MapUpdateTag();
         app.MapDeleteTag();
+        app.MapDeleteEventTag();
         return app;
     }
 }

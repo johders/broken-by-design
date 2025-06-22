@@ -99,4 +99,20 @@ public class TagRepository(IDbConnectionFactory dbConnectionFactory) : ITagRepos
         transaction.Commit();
         return result > 0;
     }
+
+    public async Task<bool> DeleteFromEventAsync(Guid eventId, Guid tagId, CancellationToken token = default)
+    {
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+        using var transaction = connection.BeginTransaction();
+
+        var sql = """
+                DELETE FROM event_tags
+                WHERE event_id = @EventId AND tag_id = @TagId;
+                """;
+
+        var result = await connection.ExecuteAsync(new CommandDefinition(sql, new { EventId = eventId, TagId = tagId }, transaction, cancellationToken: token));
+
+        transaction.Commit();
+        return result > 0;
+    }
 }

@@ -9,4 +9,5 @@ public interface ITagRepository
     Task<IEnumerable<Tag>> GetAllAsync(CancellationToken token = default);
     Task<bool> UpdateAsync(Tag tag, CancellationToken token = default);
     Task<bool> SoftDeleteAsync(Guid id, DateTimeOffset deletedOn, CancellationToken token = default);
+    Task<bool> DeleteFromEventAsync(Guid eventId, Guid tagId, CancellationToken token = default);
 }

@@ -10,4 +10,5 @@ public interface ITagService
     Task<Result<IEnumerable<Tag>>> GetAllAsync(CancellationToken token = default);
     Task<Result<Tag>> UpdateAsync(Tag tag, CancellationToken token = default);
     Task<Result> SoftDeleteAsync(Guid id, DateTimeOffset deletedOn, CancellationToken token = default);
+    Task<Result> DeleteFromEventAsync(Guid eventId, Guid tagId, CancellationToken token = default);
 }

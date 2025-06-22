@@ -15,7 +15,7 @@ public static class ApiEndpoints
         public const string Rsvp = $"{Base}/{{id:guid}}/rsvps";
         public const string DeleteRsvp = $"{Base}/{{id:guid}}/rsvps";
         public const string Tag = $"{Base}/{{id:guid}}/tags";
-        public const string DeleteTag = $"{Base}/{{id:guid}}/tags";
+        public const string DeleteTag = $"{Base}/{{id:guid}}/tags/{{tagId:guid}}";
     }
 
     public static class Tags
