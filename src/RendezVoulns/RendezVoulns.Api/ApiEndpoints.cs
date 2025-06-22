@@ -12,6 +12,11 @@ public static class ApiEndpoints
         public const string GetAll = Base;
         public const string Update = $"{Base}/{{id:guid}}";
         public const string Delete = $"{Base}/{{id:guid}}";
+        public const string Rsvp = $"{Base}/{{id:guid}}/rsvps";
+        public const string UpdateRsvp = $"{Base}/{{id:guid}}/rsvps";
+        public const string DeleteRsvp = $"{Base}/{{id:guid}}/rsvps";
+        public const string Tag = $"{Base}/{{id:guid}}/tags";
+        public const string DeleteTag = $"{Base}/{{id:guid}}/tags";
     }
 
     public static class Tags

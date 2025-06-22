@@ -13,6 +13,7 @@ public static class EndpointExtensions
         app.MapTagEndpoints();
         app.MapGroupEndpoints();
         app.MapUserEndpoints();
+        //app.MapRsvpEndpoints();
         return app;
     }
 }
