@@ -18,9 +18,21 @@ public class RsvpService(IRsvpRepository rsvpRepository) : IRsvpService
             : Result.Failure(Errors.Rsvps.CreateFailedError);
     }
     
-    public Task<Result> DeleteRsvpAsync(Guid eventId, Guid userId, CancellationToken token = default)
+    public async Task<Result<Rsvp?>> GetByIdAsync(Guid id, Guid userId, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        var rsvp = await _rsvpRepository.GetByIdAsync(id, userId, token);
+        return rsvp is not null
+            ? Result<Rsvp?>.Success(rsvp)
+            : Result<Rsvp?>.Failure(Errors.Rsvps.NotFoundError);
+    }
+
+    public async Task<Result> SoftDeleteAsync(Guid eventId, Guid userId, CancellationToken token = default)
+    {
+        var deleted = await _rsvpRepository.SoftDeleteAsync(eventId, userId, token);
+
+        return deleted
+            ? Result.Success()
+            : Result.Failure(Errors.Rsvps.DeleteFailedError);
     }
 
     public Task<Result<IEnumerable<Rsvp>>> GetRsvpsForUserAsync(Guid userId, CancellationToken token = default)

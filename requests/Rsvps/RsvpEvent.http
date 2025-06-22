@@ -2,5 +2,5 @@ POST http://localhost:5006/api/events/00000000-0000-0000-0000-000000000201/rsvps
 Content-Type: application/json
 
 {
-    "status": "No"
+    "status": "Maybe"
 }

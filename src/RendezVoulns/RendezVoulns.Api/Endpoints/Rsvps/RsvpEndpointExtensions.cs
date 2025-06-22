@@ -5,7 +5,7 @@ public static class RsvpEndpointExtensions
     public static IEndpointRouteBuilder MapRsvpEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapRsvpEvent();
-        // app.MapDeleteRsvp();
+        app.MapDeleteRsvp();
         // app.MapGetUserRsvps();
         return app;        
     }

@@ -14,7 +14,7 @@ public static class RsvpEventEndpoint
             Guid id, RsvpEventRequest request, IRsvpService service,
             CancellationToken token) =>
                 {
-                    var userId = Guid.Parse("00000000-0000-0000-0000-000000000001");
+                    var userId = Guid.Parse("00000000-0000-0000-0000-000000000003");
                     var rsvp = id.MapToRsvp(userId, request.Status);
 
                     var result = await service.RsvpEventAsync(rsvp, token);
