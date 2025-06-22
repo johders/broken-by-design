@@ -6,7 +6,6 @@ public static class RsvpEndpointExtensions
     {
         app.MapRsvpEvent();
         // app.MapDeleteRsvp();
-        // app.MapUpdateRsvp();
         // app.MapGetUserRsvps();
         return app;        
     }

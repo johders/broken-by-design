@@ -8,6 +8,8 @@ using RendezVoulns.Contracts.V1.Group.Responses;
 using RendezVoulns.Contracts.V1.User.Requests;
 using RendezVoulns.Contracts.V1.User.Responses;
 using RendezVoulns.Contracts.V1.Rsvp.Responses;
+using RendezVoulns.Contracts.V1.Rsvp.Requests;
+using RendezVoulns.Application.Models.Enums;
 
 namespace RendezVoulns.Api.Mapping;
 
@@ -188,6 +190,17 @@ public static class ContractMapping
         return new UsersResponse
         {
             Items = users.Select(u => u.MapToResponse())
+        };
+    }
+
+    public static Rsvp MapToRsvp(this Guid eventId, Guid userId, string status)
+    {
+        return new Rsvp
+        {
+            UserId = userId,
+            EventId = eventId,
+            Status = Enum.Parse<RsvpStatus>(status, ignoreCase: true),
+            RespondedOn = DateTimeOffset.UtcNow
         };
     }
     

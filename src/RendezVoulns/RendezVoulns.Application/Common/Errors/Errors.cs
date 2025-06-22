@@ -1,6 +1,7 @@
 using RendezVoulns.Application.Models.Entities;
 
 namespace RendezVoulns.Application.Common.Errors;
+
 public static class Errors
 {
     public const string Duplicate = "Duplicate";
@@ -14,7 +15,7 @@ public static class Errors
     public const string CreateFailed = "CreateFailed";
     public const string UpdateFailed = "UpdateFailed";
     public const string DeleteFailed = "DeleteFailed";
-    
+
     public static class AppEvents
     {
         private const string Domain = nameof(AppEvent);
@@ -76,5 +77,19 @@ public static class Errors
         public static readonly Error CreateFailedError = new(CreateFailedErrorCode, "The user could not be created.");
         public static readonly Error UpdateFailedError = new(UpdateFailedErrorCode, "The user could not be updated.");
         public static readonly Error DeleteFailedError = new(DeleteFailedErrorCode, "The user could not be deleted.");
+    }
+    
+    public static class Rsvps
+    {
+        private const string Domain = nameof(Rsvp);
+        public const string DuplicateNameErrorCode = $"{Domain}.{Duplicate}{Name}";
+        public const string CreateFailedErrorCode = $"{Domain}.{CreateFailed}";
+        public const string UpdateFailedErrorCode = $"{Domain}.{UpdateFailed}";
+        public const string DeleteFailedErrorCode = $"{Domain}.{DeleteFailed}";
+        public const string NotFoundErrorCode = $"{Domain}.{NotFound}";
+        public static readonly Error NotFoundError = new(NotFoundErrorCode, "Rsvp not found.");
+        public static readonly Error CreateFailedError = new(CreateFailedErrorCode, "Rsvp could not be added.");
+        public static readonly Error UpdateFailedError = new(UpdateFailedErrorCode, "Rsvp could not be updated.");
+        public static readonly Error DeleteFailedError = new(DeleteFailedErrorCode, "Rsvp could not be deleted.");
     }
 }
