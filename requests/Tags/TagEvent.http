@@ -1,0 +1,6 @@
+POST http://localhost:5006/api/events/00000000-0000-0000-0000-000000000201/tags
+Content-Type: application/json
+
+{
+    "tagId": "00000000-0000-0000-0000-000000000315"
+}

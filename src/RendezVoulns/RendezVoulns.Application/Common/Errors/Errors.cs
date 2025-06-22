@@ -13,6 +13,7 @@ public static class Errors
     public const string Title = "Title";
     public const string NotFound = "NotFound";
     public const string CreateFailed = "CreateFailed";
+    public const string TagEventFailed = "TagEventFailed";
     public const string UpdateFailed = "UpdateFailed";
     public const string DeleteFailed = "DeleteFailed";
 
@@ -53,11 +54,13 @@ public static class Errors
         private const string Domain = nameof(Tag);
         public const string DuplicateNameErrorCode = $"{Domain}.{Duplicate}{Name}";
         public const string CreateFailedErrorCode = $"{Domain}.{CreateFailed}";
+        public const string TagEventFailedErrorCode = $"{Domain}.{TagEventFailed}";
         public const string UpdateFailedErrorCode = $"{Domain}.{UpdateFailed}";
         public const string DeleteFailedErrorCode = $"{Domain}.{DeleteFailed}";
         public const string NotFoundErrorCode = $"{Domain}.{NotFound}";
         public static readonly Error NotFoundError = new(NotFoundErrorCode, "Tag not found.");
         public static readonly Error CreateFailedError = new(CreateFailedErrorCode, "The tag could not be created.");
+        public static readonly Error TagEventFailedError = new(TagEventFailedErrorCode, "The tag could not be added to the event.");
         public static readonly Error UpdateFailedError = new(UpdateFailedErrorCode, "The tag could not be updated.");
         public static readonly Error DeleteFailedError = new(DeleteFailedErrorCode, "The tag could not be deleted.");
     }

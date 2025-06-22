@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc.Formatters;
 using RendezVoulns.Application.Common.Errors;
 using RendezVoulns.Application.Common.Results;
 

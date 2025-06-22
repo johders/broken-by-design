@@ -115,4 +115,22 @@ public class TagRepository(IDbConnectionFactory dbConnectionFactory) : ITagRepos
         transaction.Commit();
         return result > 0;
     }
+
+    public async Task<bool> TagEventAsync(Guid eventId, Guid tagId, CancellationToken token = default)
+    {
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+        using var transaction = connection.BeginTransaction();
+
+        var sql = """
+                INSERT INTO event_tags (event_id, tag_id)
+                VALUES (@EventId, @TagId)
+                ON CONFLICT DO NOTHING;
+                """;
+
+        var result = await connection.ExecuteAsync(
+            new CommandDefinition(sql, new { EventId = eventId, TagId = tagId }, transaction, cancellationToken: token));
+
+        transaction.Commit();
+        return result > 0;
+    }
 }

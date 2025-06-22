@@ -73,4 +73,13 @@ public class TagService(ITagRepository tagRepository) : ITagService
             ? Result.Success()
             : Result.Failure(Errors.Tags.DeleteFailedError);
     }
+
+    public async Task<Result> TagEventAsync(Guid eventId, Guid tagId, CancellationToken token = default)
+    {
+        var tagged = await _tagRepository.TagEventAsync(eventId, tagId, token);
+
+        return tagged
+            ? Result.Success()
+            : Result.Failure(Errors.Tags.TagEventFailedError);
+    }
 }
