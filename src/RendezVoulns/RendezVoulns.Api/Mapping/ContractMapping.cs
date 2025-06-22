@@ -203,7 +203,7 @@ public static class ContractMapping
             RespondedOn = DateTimeOffset.UtcNow
         };
     }
-    
+
     public static RsvpResponse MapToResponse(this Rsvp rsvp)
     {
         return new RsvpResponse
@@ -212,6 +212,14 @@ public static class ContractMapping
             EventId = rsvp.EventId,
             Status = rsvp.Status.ToString(),
             RespondedOn = rsvp.RespondedOn
+        };
+    }
+    
+    public static RsvpsResponse MapToResponse(this IEnumerable<Rsvp> rsvps)
+    {
+        return new RsvpsResponse
+        {
+            Items = rsvps.Select(r => r.MapToResponse())
         };
     }
 }

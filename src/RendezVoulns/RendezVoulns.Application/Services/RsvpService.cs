@@ -35,8 +35,9 @@ public class RsvpService(IRsvpRepository rsvpRepository) : IRsvpService
             : Result.Failure(Errors.Rsvps.DeleteFailedError);
     }
 
-    public Task<Result<IEnumerable<Rsvp>>> GetRsvpsForUserAsync(Guid userId, CancellationToken token = default)
+    public async Task<Result<IEnumerable<Rsvp>>> GetRsvpsForUserAsync(Guid userId, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        var rsvps = await _rsvpRepository.GetRsvpsForUserAsync(userId, token);
+        return Result<IEnumerable<Rsvp>>.Success(rsvps);
     }
 }

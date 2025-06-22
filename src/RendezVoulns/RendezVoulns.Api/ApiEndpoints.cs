@@ -47,4 +47,9 @@ public static class ApiEndpoints
         public const string Update = $"{Base}/{{id:guid}}";
         public const string Delete = $"{Base}/{{id:guid}}";
     }
+    public static class Rsvps
+    {
+        private const string Base = $"{ApiBase}/rsvps";
+        public const string GetUserRsvps = $"{ApiBase}/rsvps/me";
+    }
 }

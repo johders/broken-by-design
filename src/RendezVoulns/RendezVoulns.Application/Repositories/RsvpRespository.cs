@@ -59,10 +59,17 @@ public class RsvpRepository(IDbConnectionFactory dbConnectionFactory) : IRsvpRep
         return result > 0;
     }
 
-    public Task<IEnumerable<Rsvp>> GetRsvpsForUserAsync(Guid userId, CancellationToken token = default)
+    public async Task<IEnumerable<Rsvp>> GetRsvpsForUserAsync(Guid userId, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+
+        var sql = """
+            SELECT user_id AS UserId, event_id AS EventId, status, responded_on AS RespondedOn FROM rsvps
+            WHERE deleted_on IS NULL
+            AND user_id = @UserId
+            """;
+        var rsvps = await connection.QueryAsync<Rsvp>(new CommandDefinition(sql, new { UserId = userId }, cancellationToken: token));
+
+        return rsvps;
     }
-
-
 }
