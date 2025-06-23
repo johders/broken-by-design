@@ -2,6 +2,7 @@ using Dapper;
 using RendezVoulns.Application.Models.Entities;
 using RendezVoulns.Application.Models.Enums;
 using RendezVoulns.Application.Persistence.Database;
+using RendezVoulns.Application.ReadModels;
 using RendezVoulns.Application.Repositories.Interfaces;
 
 namespace RendezVoulns.Application.Repositories;
@@ -43,18 +44,31 @@ public class MembershipRepository(IDbConnectionFactory dbConnectionFactory) : IM
         return memberships;
     }
 
-    public async Task<IEnumerable<Membership>> GetUserMembershipsAsync(Guid userId, CancellationToken token = default)
+    public async Task<IEnumerable<MembershipWithGroup>> GetUserMembershipsAsync(Guid userId, CancellationToken token = default)
     {
         using var connection = await _dbConnectionFactory.CreateConnectionAsync();
 
         var sql = """
-            SELECT user_id AS UserId, group_id AS GroupId, role, joined_on AS JoinedOn, updated_on AS UpdatedOn FROM memberships
-            WHERE deleted_on IS NULL
-            AND user_id = @UserId
+            SELECT m.user_id AS UserId, m.group_id AS GroupId, m.role, m.joined_on AS JoinedOn, g.id AS Id, g.name, g.description
+            FROM memberships m
+            JOIN groups g ON g.id = m.group_id
+            WHERE m.deleted_on IS NULL
+            AND g.deleted_on IS NULL
+            AND m.user_id = @UserId
             """;
-        var memberships = await connection.QueryAsync<Membership>(new CommandDefinition(sql, new { UserId = userId }, cancellationToken: token));
 
-        return memberships;
+    var command = new CommandDefinition(sql, new { UserId = userId }, cancellationToken: token);
+
+    var memberships = await connection.QueryAsync<MembershipWithGroup, GroupSummary, MembershipWithGroup>(
+        command, (membership, groupSummary) =>
+            {
+                membership.Group = groupSummary;
+                return membership;
+            },
+        splitOn: "Id"
+    );
+
+    return memberships;
     }
 
     public async Task<bool> SoftDeleteAsync(Guid userId, Guid groupId, CancellationToken token = default)

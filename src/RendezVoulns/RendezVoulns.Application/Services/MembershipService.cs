@@ -1,6 +1,7 @@
 using RendezVoulns.Application.Common.Errors;
 using RendezVoulns.Application.Common.Results;
 using RendezVoulns.Application.Models.Entities;
+using RendezVoulns.Application.ReadModels;
 using RendezVoulns.Application.Repositories.Interfaces;
 using RendezVoulns.Application.Services.Interfaces;
 
@@ -27,10 +28,10 @@ public class MembershipService(IMembershipRepository membershipRepository) : IMe
             : Result<Membership?>.Failure(Errors.Memberships.NotFoundError);
     }
 
-    public async Task<Result<IEnumerable<Membership>>> GetUserMembershipsAsync(Guid userId, CancellationToken token = default)
+    public async Task<Result<IEnumerable<MembershipWithGroup>>> GetUserMembershipsAsync(Guid userId, CancellationToken token = default)
     {
         var memberships = await _membershipRepository.GetUserMembershipsAsync(userId, token);
-        return Result<IEnumerable<Membership>>.Success(memberships);
+        return Result<IEnumerable<MembershipWithGroup>>.Success(memberships);
     }
 
     public async Task<Result> SoftDeleteAsync(Guid userId, Guid groupId, CancellationToken token = default)

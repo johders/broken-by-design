@@ -12,6 +12,7 @@ using RendezVoulns.Contracts.V1.Rsvp.Requests;
 using RendezVoulns.Application.Models.Enums;
 using RendezVoulns.Contracts.V1.Membership.Responses;
 using RendezVoulns.Contracts.V1.Membership.Requests;
+using RendezVoulns.Application.ReadModels;
 
 namespace RendezVoulns.Api.Mapping;
 
@@ -248,10 +249,26 @@ public static class ContractMapping
             JoinedOn = membership.JoinedOn
         };
     }
-    
-        public static MembershipsResponse MapToResponse(this IEnumerable<Membership> memberships)
+
+    public static MembershipWithGroupResponse MapToResponse(this MembershipWithGroup membership)
+{
+    return new MembershipWithGroupResponse
     {
-        return new MembershipsResponse
+        Group = new GroupSummaryResponse
+        {
+            Id = membership.Group.Id,
+            Name = membership.Group.Name,
+            Description = membership.Group.Description
+        },
+        Role = membership.Role,
+        JoinedOn = membership.JoinedOn
+    };
+}
+
+
+    public static MembershipsWithGroupResponse MapToResponse(this IEnumerable<MembershipWithGroup> memberships)
+    {
+        return new MembershipsWithGroupResponse
         {
             Items = memberships.Select(m => m.MapToResponse())
         };
