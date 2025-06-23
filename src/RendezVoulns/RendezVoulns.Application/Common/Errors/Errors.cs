@@ -81,7 +81,7 @@ public static class Errors
         public static readonly Error UpdateFailedError = new(UpdateFailedErrorCode, "The user could not be updated.");
         public static readonly Error DeleteFailedError = new(DeleteFailedErrorCode, "The user could not be deleted.");
     }
-    
+
     public static class Rsvps
     {
         private const string Domain = nameof(Rsvp);
@@ -95,4 +95,17 @@ public static class Errors
         public static readonly Error UpdateFailedError = new(UpdateFailedErrorCode, "Rsvp could not be updated.");
         public static readonly Error DeleteFailedError = new(DeleteFailedErrorCode, "Rsvp could not be deleted.");
     }
+    
+    public static class Memberships
+    {
+        private const string Domain = nameof(Membership);
+        public const string CreateFailedErrorCode = $"{Domain}.{CreateFailed}";
+        public const string UpdateFailedErrorCode = $"{Domain}.{UpdateFailed}";
+        public const string DeleteFailedErrorCode = $"{Domain}.{DeleteFailed}";
+        public const string NotFoundErrorCode = $"{Domain}.{NotFound}";
+        public static readonly Error NotFoundError = new(NotFoundErrorCode, "Membership not found.");
+        public static readonly Error CreateFailedError = new(CreateFailedErrorCode, "Membership could not be added.");
+        public static readonly Error UpdateFailedError = new(UpdateFailedErrorCode, "Membership could not be updated.");
+        public static readonly Error DeleteFailedError = new(DeleteFailedErrorCode, "Membership could not be deleted.");
+    }    
 }

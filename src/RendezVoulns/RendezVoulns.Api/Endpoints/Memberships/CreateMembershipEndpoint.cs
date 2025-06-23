@@ -1,23 +1,21 @@
 using RendezVoulns.Api.Mapping;
 using RendezVoulns.Application.Services.Interfaces;
-using RendezVoulns.Contracts.V1.Membership.Requests;
 
 namespace RendezVoulns.Api.Endpoints.Memberships;
 
-public static class CreateMembershipEndpoint
+public static class JoinGroupEndpoint
 {
-    private const string Name = "CreateMembership";
+    private const string Name = "JoinGroup";
 
-    public static IEndpointRouteBuilder MapCreateMembership(this IEndpointRouteBuilder app)
+    public static IEndpointRouteBuilder MapJoinGroup(this IEndpointRouteBuilder app)
     {
         app.MapPost(ApiEndpoints.Groups.Join, async (
-            Guid id, MembershipRequest request, IMembershipService service,
+            Guid id, IMembershipService service,
             CancellationToken token) =>
                 {
                     var userId = Guid.Parse("00000000-0000-0000-0000-000000000003");
-                    var membership = id.MapToMemberShip(userId, request.Status);
 
-                    var result = await service.CreateAsync(membership, token);
+                    var result = await service.JoinAsync(userId, id, token);
 
                     return result.Match(
                         onSuccess: () => TypedResults.Ok(),

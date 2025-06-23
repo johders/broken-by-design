@@ -1,3 +1,4 @@
+using RendezVoulns.Application.Common.Errors;
 using RendezVoulns.Application.Common.Results;
 using RendezVoulns.Application.Models.Entities;
 using RendezVoulns.Application.Repositories.Interfaces;
@@ -8,11 +9,16 @@ namespace RendezVoulns.Application.Services;
 public class MembershipService(IMembershipRepository membershipRepository) : IMembershipService
 {
     private readonly IMembershipRepository _membershipRepository = membershipRepository;
-    public Task<Result> CreateAsync(Membership membership, CancellationToken token = default)
-    {
-        throw new NotImplementedException();
-    }
 
+    public async Task<Result> JoinAsync(Guid userId, Guid groupId, CancellationToken token = default)
+    {
+        var joined = await _membershipRepository.JoinAsync(userId, groupId, token);
+
+        return joined
+            ? Result.Success()
+            : Result.Failure(Errors.Memberships.CreateFailedError);
+    }
+    
     public Task<Result<Rsvp?>> GetByIdAsync(Guid id, Guid userId, CancellationToken token = default)
     {
         throw new NotImplementedException();
@@ -24,6 +30,11 @@ public class MembershipService(IMembershipRepository membershipRepository) : IMe
     }
 
     public Task<Result> SoftDeleteAsync(Guid userId, Guid groupId, CancellationToken token = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<Result> UpdateAsync(Membership membership, CancellationToken token = default)
     {
         throw new NotImplementedException();
     }

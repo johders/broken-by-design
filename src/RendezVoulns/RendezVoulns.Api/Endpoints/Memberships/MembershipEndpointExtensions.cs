@@ -4,7 +4,7 @@ public static class MembershipEndpointExtensions
 {
     public static IEndpointRouteBuilder MapMembershipEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapCreateMembership();
+        app.MapJoinGroup();
         // app.MapUpdateGroupMembership();
         // app.MapDeleteMembership();
         // app.MapGetUserMembership();

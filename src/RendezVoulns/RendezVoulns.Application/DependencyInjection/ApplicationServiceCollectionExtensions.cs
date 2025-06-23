@@ -16,12 +16,14 @@ public static class ApplicationServiceCollectionExtensions
         services.AddSingleton<IGroupRepository, GroupRepository>();
         services.AddSingleton<IUserRepository, UserRepository>();
         services.AddSingleton<IRsvpRepository, RsvpRepository>();
+        services.AddSingleton<IMembershipRepository, MembershipRepository>();
 
         services.AddSingleton<IAppEventService, AppEventService>();
         services.AddSingleton<ITagService, TagService>();
         services.AddSingleton<IGroupService, GroupService>();
         services.AddSingleton<IUserService, UserService>();
         services.AddSingleton<IRsvpService, RsvpService>();
+        services.AddSingleton<IMembershipService, MembershipService>();
         return services;
     }
 
