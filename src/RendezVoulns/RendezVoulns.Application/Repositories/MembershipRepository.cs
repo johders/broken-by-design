@@ -28,23 +28,68 @@ public class MembershipRepository(IDbConnectionFactory dbConnectionFactory) : IM
         return result > 0;
     }
 
-    public Task<Membership?> GetByIdAsync(Guid id, Guid userId, CancellationToken token = default)
+    public async Task<Membership?> GetByIdAsync(Guid userId, Guid groupId, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+
+        var sql = """
+            SELECT user_id AS UserId, group_id AS GroupId, role, joined_on AS JoinedOn, updated_on AS UpdatedOn FROM memberships
+            WHERE group_id = @GroupId
+            AND user_id = @UserId
+            AND deleted_on IS NULL
+            """;
+        var memberships = await connection.QueryFirstOrDefaultAsync<Membership>(new CommandDefinition(sql, new { GroupId = groupId, UserId = userId }, cancellationToken: token));
+
+        return memberships;
     }
 
-    public Task<IEnumerable<Membership>> GetUserMembershipsAsync(Guid userId, CancellationToken token = default)
+    public async Task<IEnumerable<Membership>> GetUserMembershipsAsync(Guid userId, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+
+        var sql = """
+            SELECT user_id AS UserId, group_id AS GroupId, role, joined_on AS JoinedOn, updated_on AS UpdatedOn FROM memberships
+            WHERE deleted_on IS NULL
+            AND user_id = @UserId
+            """;
+        var memberships = await connection.QueryAsync<Membership>(new CommandDefinition(sql, new { UserId = userId }, cancellationToken: token));
+
+        return memberships;
     }
 
-    public Task<bool> SoftDeleteAsync(Guid userId, Guid groupId, CancellationToken token = default)
+    public async Task<bool> SoftDeleteAsync(Guid userId, Guid groupId, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+        using var transaction = connection.BeginTransaction();
+
+        var sql = """
+            UPDATE memberships 
+            SET updated_on = NOW(), deleted_on = NOW()
+            WHERE group_id = @GroupId
+            AND user_id = @UserId;
+            """;
+
+        var result = await connection.ExecuteAsync(new CommandDefinition(sql, new { GroupId = groupId, UserId = userId }, transaction, cancellationToken: token));
+
+        transaction.Commit();
+        return result > 0;
     }
 
-    public Task<bool> UpdateAsync(Membership membership, CancellationToken token = default)
+    public async Task<bool> UpdateAsync(Membership membership, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+        using var transaction = connection.BeginTransaction();
+
+        var sql = """
+            UPDATE memberships 
+            SET role = @Role, updated_on = NOW()
+            WHERE group_id = @GroupId
+            AND user_id = @UserId;
+            """;
+
+        var result = await connection.ExecuteAsync(new CommandDefinition(sql, new { membership.GroupId, membership.UserId, Role = membership.Role.ToString() }, transaction, cancellationToken: token));
+
+        transaction.Commit();
+        return result > 0;
     }
 }

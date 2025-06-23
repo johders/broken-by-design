@@ -19,23 +19,35 @@ public class MembershipService(IMembershipRepository membershipRepository) : IMe
             : Result.Failure(Errors.Memberships.CreateFailedError);
     }
     
-    public Task<Result<Rsvp?>> GetByIdAsync(Guid id, Guid userId, CancellationToken token = default)
+    public async Task<Result<Membership?>> GetByIdAsync(Guid userId, Guid groupId, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        var membership = await _membershipRepository.GetByIdAsync(userId, groupId, token);
+        return membership is not null
+            ? Result<Membership?>.Success(membership)
+            : Result<Membership?>.Failure(Errors.Memberships.NotFoundError);
     }
 
-    public Task<Result<IEnumerable<Rsvp>>> GetUserMembershipsAsync(Guid userId, CancellationToken token = default)
+    public async Task<Result<IEnumerable<Membership>>> GetUserMembershipsAsync(Guid userId, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        var memberships = await _membershipRepository.GetUserMembershipsAsync(userId, token);
+        return Result<IEnumerable<Membership>>.Success(memberships);
     }
 
-    public Task<Result> SoftDeleteAsync(Guid userId, Guid groupId, CancellationToken token = default)
+    public async Task<Result> SoftDeleteAsync(Guid userId, Guid groupId, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        var deleted = await _membershipRepository.SoftDeleteAsync(userId, groupId, token);
+
+        return deleted
+            ? Result.Success()
+            : Result.Failure(Errors.Memberships.DeleteFailedError);
     }
 
-    public Task<Result> UpdateAsync(Membership membership, CancellationToken token = default)
+    public async Task<Result<Membership>> UpdateAsync(Membership membership, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        var updated = await _membershipRepository.UpdateAsync(membership, token);
+
+        return updated
+            ? Result<Membership>.Success(membership)
+            : Result<Membership>.Failure(Errors.Memberships.UpdateFailedError);
     }
 }

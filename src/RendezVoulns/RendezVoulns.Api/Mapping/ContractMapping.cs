@@ -11,6 +11,7 @@ using RendezVoulns.Contracts.V1.Rsvp.Responses;
 using RendezVoulns.Contracts.V1.Rsvp.Requests;
 using RendezVoulns.Application.Models.Enums;
 using RendezVoulns.Contracts.V1.Membership.Responses;
+using RendezVoulns.Contracts.V1.Membership.Requests;
 
 namespace RendezVoulns.Api.Mapping;
 
@@ -225,13 +226,13 @@ public static class ContractMapping
         };
     }
 
-    public static Membership MapToMemberShip(this Guid userId, Guid groupId, string role)
+    public static Membership MapToMemberShip(this UpdateMembershipRequest request, Guid groupId)
     {
-        var parsed = Enum.TryParse<GroupRole>(role, ignoreCase: true, out var parsedRole);
+        var parsed = Enum.TryParse<GroupRole>(request.Role, ignoreCase: true, out var parsedRole);
 
         return new Membership
         {
-            UserId = userId,
+            UserId = request.UserId,
             GroupId = groupId,
             Role = parsed ? parsedRole : GroupRole.Member
         };
