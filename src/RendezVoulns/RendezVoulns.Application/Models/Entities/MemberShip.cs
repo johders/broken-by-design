@@ -7,6 +7,6 @@ public class Membership : TrackableEntity
 {
     public required Guid UserId { get; init; }
     public required Guid GroupId { get; init; }
-    public required GroupRole Role { get; init; } = GroupRole.Member;
-    public required DateTimeOffset JoinedOn { get; init; } = DateTimeOffset.UtcNow;
+    public GroupRole Role { get; init; } = GroupRole.Member;
+    public DateTimeOffset JoinedOn { get; init; } = DateTimeOffset.UtcNow;
 }

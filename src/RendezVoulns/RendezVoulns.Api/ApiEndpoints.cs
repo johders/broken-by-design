@@ -36,6 +36,9 @@ public static class ApiEndpoints
         public const string GetAll = Base;
         public const string Update = $"{Base}/{{id:guid}}";
         public const string Delete = $"{Base}/{{id:guid}}";
+        public const string Join = $"{Base}/{{id:guid}}/memberships";
+        public const string UpdateMembership = $"{Base}/{{id:guid}}/memberships";
+        public const string DeleteMembership = $"{Base}/{{id:guid}}/memberships/{{userId:guid}}";
     }
 
     public static class Users

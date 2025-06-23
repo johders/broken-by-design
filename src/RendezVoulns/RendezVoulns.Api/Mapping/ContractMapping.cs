@@ -10,6 +10,7 @@ using RendezVoulns.Contracts.V1.User.Responses;
 using RendezVoulns.Contracts.V1.Rsvp.Responses;
 using RendezVoulns.Contracts.V1.Rsvp.Requests;
 using RendezVoulns.Application.Models.Enums;
+using RendezVoulns.Contracts.V1.Membership.Responses;
 
 namespace RendezVoulns.Api.Mapping;
 
@@ -195,12 +196,13 @@ public static class ContractMapping
 
     public static Rsvp MapToRsvp(this Guid eventId, Guid userId, string status)
     {
+        var parsed = Enum.TryParse<RsvpStatus>(status, ignoreCase: true, out var parsedStatus);
+
         return new Rsvp
         {
             UserId = userId,
             EventId = eventId,
-            Status = Enum.Parse<RsvpStatus>(status, ignoreCase: true),
-            RespondedOn = DateTimeOffset.UtcNow
+            Status = parsed ? parsedStatus : RsvpStatus.Maybe
         };
     }
 
@@ -214,12 +216,43 @@ public static class ContractMapping
             RespondedOn = rsvp.RespondedOn
         };
     }
-    
+
     public static RsvpsResponse MapToResponse(this IEnumerable<Rsvp> rsvps)
     {
         return new RsvpsResponse
         {
             Items = rsvps.Select(r => r.MapToResponse())
+        };
+    }
+
+    public static Membership MapToMemberShip(this Guid userId, Guid groupId, string role)
+    {
+        var parsed = Enum.TryParse<GroupRole>(role, ignoreCase: true, out var parsedRole);
+
+        return new Membership
+        {
+            UserId = userId,
+            GroupId = groupId,
+            Role = parsed ? parsedRole : GroupRole.Member
+        };
+    }
+
+    public static MembershipResponse MapToResponse(this Membership membership)
+    {
+        return new MembershipResponse
+        {
+            UserId = membership.UserId,
+            GroupId = membership.GroupId,
+            Role = membership.Role.ToString(),
+            JoinedOn = membership.JoinedOn
+        };
+    }
+    
+        public static MembershipsResponse MapToResponse(this IEnumerable<Membership> memberships)
+    {
+        return new MembershipsResponse
+        {
+            Items = memberships.Select(m => m.MapToResponse())
         };
     }
 }

@@ -1,5 +1,6 @@
 using RendezVoulns.Api.Endpoints.AppEvents;
 using RendezVoulns.Api.Endpoints.Groups;
+using RendezVoulns.Api.Endpoints.Memberships;
 using RendezVoulns.Api.Endpoints.Rsvps;
 using RendezVoulns.Api.Endpoints.Tags;
 using RendezVoulns.Api.Endpoints.Users;
@@ -15,6 +16,7 @@ public static class EndpointExtensions
         app.MapGroupEndpoints();
         app.MapUserEndpoints();
         app.MapRsvpEndpoints();
+        app.MapMembershipEndpoints();
         return app;
     }
 }
