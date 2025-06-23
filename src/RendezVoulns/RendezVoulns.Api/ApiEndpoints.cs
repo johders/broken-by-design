@@ -55,4 +55,10 @@ public static class ApiEndpoints
         private const string Base = $"{ApiBase}/rsvps";
         public const string GetUserRsvps = $"{ApiBase}/rsvps/me";
     }
+
+    public static class Memberships
+    {
+        private const string Base = $"{ApiBase}/memberships";
+        public const string GetUserMemberships = $"{ApiBase}/memberships/me";
+    }
 }

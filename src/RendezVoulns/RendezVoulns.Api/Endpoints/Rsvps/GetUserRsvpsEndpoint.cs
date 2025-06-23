@@ -3,7 +3,7 @@ using RendezVoulns.Application.Services.Interfaces;
 
 namespace RendezVoulns.Api.Endpoints.Rsvps;
 
-public static class GetAllTagsEndpoint
+public static class GetUserRsvpsEndpoint
 {
     private const string Name = "GetUserRsvps";
 

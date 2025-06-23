@@ -7,7 +7,7 @@ public static class MembershipEndpointExtensions
         app.MapJoinGroup();
         app.MapUpdateMembership();
         app.MapDeleteMembership();
-        //app.MapGetUserMembership();
+        app.MapGetUserMemberships();
         return app;        
     }
 }
