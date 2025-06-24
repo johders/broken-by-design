@@ -1,4 +1,5 @@
 using RendezVoulns.Api.Mapping;
+using RendezVoulns.Api.Validation;
 using RendezVoulns.Application.Services.Interfaces;
 using RendezVoulns.Contracts.V1.AppEvent.Requests;
 
@@ -21,7 +22,8 @@ public static class CreateAppEventEndpoint
                         onSuccess: () => TypedResults.CreatedAtRoute(appEvent.MapToResponse(), GetAppEventEndpoint.Name, new { idOrSlug = appEvent.Slug }),
                         onFailure: error => error.ToProblem());
                 })
-                .WithName(Name);
+                .WithName(Name)
+                .WithValidation<CreateAppEventRequest>();
         return app;
     }
 }

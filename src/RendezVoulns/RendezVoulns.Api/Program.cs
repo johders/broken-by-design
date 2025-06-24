@@ -1,6 +1,8 @@
+using FluentValidation;
 using RendezVoulns.Api.Endpoints;
 using RendezVoulns.Api.RequestPipeline;
 using RendezVoulns.Application.DependencyInjection;
+using RendezVoulns.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -11,6 +13,9 @@ builder.Services.AddOpenApi();
 builder.Services
     .AddApplication()
     .AddDatabase(connectionString);
+
+builder.Services.AddValidatorsFromAssemblyContaining<IContractsMarker>(ServiceLifetime.Singleton);
+
 
 var app = builder.Build();
 

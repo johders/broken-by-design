@@ -11,6 +11,7 @@ public static partial class ErrorMapping
     private const string Conflict = "Conflict";
     private const string BadRequest = "Bad Request";
     private const string Unexpected = "Unexpected Error";
+    private const string Validation = "Validation";
     public static IResult ToProblem(this Error error)
     {
         return error.Domain switch
@@ -19,16 +20,31 @@ public static partial class ErrorMapping
             nameof(Group) => MappGroupErrors(error),
             nameof(Tag) => MappTagErrors(error),
             nameof(User) => MapUserErrors(error),
+            Validation => CreateProblemResult(StatusCodes.Status400BadRequest, Validation, error),
             _ => CreateProblemResult(StatusCodes.Status500InternalServerError, Unexpected, error),
         };
     }
 
-    private static ProblemHttpResult CreateProblemResult(int statusCode, string title, Error error) {
+    private static ProblemHttpResult CreateProblemResult(int statusCode, string title, Error error)
+    {
+        var extensions = new Dictionary<string, object?>
+        {
+            {"errorCode", error.Code}
+        };
+
+        if (error.Extensions is not null)
+        {
+            foreach (var kvp in error.Extensions)
+            {
+                extensions[kvp.Key] = kvp.Value;
+            }
+        }
+
         return TypedResults.Problem(
             title: title,
             detail: error.Message,
             statusCode: statusCode,
-            extensions: new Dictionary<string, object?> { { "errorCode", error.Code } }
+            extensions: extensions
         );
     }
 }

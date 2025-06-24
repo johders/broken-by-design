@@ -57,18 +57,18 @@ public class MembershipRepository(IDbConnectionFactory dbConnectionFactory) : IM
             AND m.user_id = @UserId
             """;
 
-    var command = new CommandDefinition(sql, new { UserId = userId }, cancellationToken: token);
+        var command = new CommandDefinition(sql, new { UserId = userId }, cancellationToken: token);
 
-    var memberships = await connection.QueryAsync<MembershipWithGroup, GroupSummary, MembershipWithGroup>(
-        command, (membership, groupSummary) =>
-            {
-                membership.Group = groupSummary;
-                return membership;
-            },
-        splitOn: "Id"
-    );
+        var memberships = await connection.QueryAsync<MembershipWithGroup, GroupSummary, MembershipWithGroup>(
+            command, (membership, groupSummary) =>
+                {
+                    membership.Group = groupSummary;
+                    return membership;
+                },
+            splitOn: "Id"
+        );
 
-    return memberships;
+        return memberships;
     }
 
     public async Task<bool> SoftDeleteAsync(Guid userId, Guid groupId, CancellationToken token = default)
