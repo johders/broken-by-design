@@ -1,5 +1,6 @@
 using FluentValidation;
 using RendezVoulns.Api.Endpoints;
+using RendezVoulns.Api.ErrorHandling;
 using RendezVoulns.Api.RequestPipeline;
 using RendezVoulns.Application.DependencyInjection;
 using RendezVoulns.Contracts;
@@ -11,6 +12,7 @@ string connectionString = config["Database:ConnectionString"]!;
 builder.Services.AddOpenApi();
 
 builder.Services
+    .AddGlobalErrorHandling()
     .AddApplication()
     .AddDatabase(connectionString);
 
@@ -25,6 +27,7 @@ if (app.Environment.IsDevelopment())
 }
 
 {
+    app.UseGlobalErrorHandling();
     app.UseHttpsRedirection();
     app.MapApiEndpoints();
     app.InitializeDatabase(connectionString);

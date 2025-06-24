@@ -6,7 +6,6 @@ namespace RendezVoulns.Api.Mapping;
 
 public static partial class ErrorMapping
 {
-
     private const string NotFound = "Not Found";
     private const string Conflict = "Conflict";
     private const string BadRequest = "Bad Request";
@@ -21,7 +20,7 @@ public static partial class ErrorMapping
             nameof(Tag) => MappTagErrors(error),
             nameof(User) => MapUserErrors(error),
             Validation => CreateProblemResult(StatusCodes.Status400BadRequest, Validation, error),
-            _ => CreateProblemResult(StatusCodes.Status500InternalServerError, Unexpected, error),
+            _ => CreateProblemResult(StatusCodes.Status500InternalServerError, error.Domain ?? Unexpected, error),
         };
     }
 

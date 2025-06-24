@@ -6,6 +6,6 @@ Content-Type: application/json
     "title": "Cooler things no",
     "description": "An annual thing focusing on the latest trends in technology and software development.",
     "location": "De Haan, Belgium",
-    "startTime": "2025-06-15T07:00:00Z",
-    "endTime": "2025-06-14T15:00:00Z"
+    "startTime": "2025-06-25T07:00:00Z",
+    "endTime": "2025-06-28T15:00:00Z"
 }
