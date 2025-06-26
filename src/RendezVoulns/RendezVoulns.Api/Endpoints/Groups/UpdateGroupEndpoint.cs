@@ -1,4 +1,5 @@
 using RendezVoulns.Api.Mapping;
+using RendezVoulns.Api.Validation;
 using RendezVoulns.Application.Services.Interfaces;
 using RendezVoulns.Contracts.V1.Group.Requests;
 
@@ -23,9 +24,10 @@ public static class UpdateGroupEndpoint
 
                     return result.Match(
                         onSuccess: updatedGroup => TypedResults.Ok(updatedGroup.MapToResponse()),
-                        onFailure: error => error.ToProblem());      
+                        onFailure: error => error.ToProblem());
                 })
-                .WithName(Name);
+                .WithName(Name)
+                .WithValidation<UpdateGroupRequest>();
         return app;
     }
 }

@@ -3,7 +3,7 @@ using RendezVoulns.Contracts.V1.AppEvent.Requests;
 
 namespace RendezVoulns.Contracts.Validators;
 
-public class AppEventValidatorBase<T> : AbstractValidator<T> where T : IAppEventRequest
+public abstract class AppEventValidatorBase<T> : AbstractValidator<T> where T : IAppEventRequest
 {
     public AppEventValidatorBase()
     {

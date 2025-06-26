@@ -1,4 +1,5 @@
 using RendezVoulns.Api.Mapping;
+using RendezVoulns.Api.Validation;
 using RendezVoulns.Application.Services.Interfaces;
 using RendezVoulns.Contracts.V1.Group.Requests;
 
@@ -20,7 +21,8 @@ public static class CreateGroupEndpoint
                         onSuccess: () => TypedResults.CreatedAtRoute(group.MapToResponse(), GetGroupEndpoint.Name, new { group.Id }),
                         onFailure: error => error.ToProblem());
                 })
-                .WithName(Name);
+                .WithName(Name)
+                .WithValidation<CreateGroupRequest>();
         return app;
     }
 }
