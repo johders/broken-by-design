@@ -10,8 +10,8 @@ public class ValidationFilter<T>(IValidator<T> validator) : IEndpointFilter wher
 
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
     {
-        var argument = context.GetArgument<T>(0);
-        var validationResult = await _validator.ValidateAsync(argument);
+        var argument = context.Arguments.FirstOrDefault(arg => arg is T) as T;
+        var validationResult = await _validator.ValidateAsync(argument!);
 
         if (!validationResult.IsValid)
         {

@@ -1,6 +1,6 @@
 namespace RendezVoulns.Contracts.V1.AppEvent.Requests;
 
-public class CreateAppEventRequest
+public class CreateAppEventRequest : IAppEventRequest
 {
     public required Guid GroupId { get; init; }
     public required string Title { get; init; }

@@ -18,7 +18,6 @@ builder.Services
 
 builder.Services.AddValidatorsFromAssemblyContaining<IContractsMarker>(ServiceLifetime.Singleton);
 
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

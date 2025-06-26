@@ -1,4 +1,5 @@
 using RendezVoulns.Api.Mapping;
+using RendezVoulns.Api.Validation;
 using RendezVoulns.Application.Services.Interfaces;
 using RendezVoulns.Contracts.V1.AppEvent.Requests;
 
@@ -23,9 +24,10 @@ public static class UpdateAppEventEndpoint
 
                     return result.Match(
                         onSuccess: updatedEvent => TypedResults.Ok(updatedEvent.MapToResponse()),
-                        onFailure: error => error.ToProblem());                
+                        onFailure: error => error.ToProblem());
                 })
-                .WithName(Name);
+                .WithName(Name)
+                .WithValidation<UpdateAppEventRequest>();
         return app;
     }
 }

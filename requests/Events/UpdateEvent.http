@@ -1,4 +1,4 @@
-PUT http://localhost:5006/api/events/0fefaa25-58c6-430a-b659-0c11a52dad5c
+PUT http://localhost:5006/api/events/d0f63d46-480c-4a22-8989-55e1b2c4d6f2
 Content-Type: application/json
 
 {
@@ -6,6 +6,6 @@ Content-Type: application/json
     "title": "Cybersecurity Meetup: Staying Safe Online",
     "description": "An conference with snacks and talks about latest trends in technology and software development.",
     "location": "Malaga, Spain",
-    "startTime": "2025-09-19T07:00:00Z",
-    "endTime": "2025-09-12T15:00:00Z" 
+    "startTime": "2026-08-19T07:00:00Z",
+    "endTime": "2026-08-21T15:00:00Z" 
 }
