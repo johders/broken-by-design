@@ -1,4 +1,5 @@
 using RendezVoulns.Api.Mapping;
+using RendezVoulns.Api.Validation;
 using RendezVoulns.Application.Services.Interfaces;
 using RendezVoulns.Contracts.V1.Rsvp.Requests;
 
@@ -23,7 +24,8 @@ public static class RsvpEventEndpoint
                         onSuccess: () => TypedResults.Ok(),
                         onFailure: error => error.ToProblem());
                 })
-                .WithName(Name);
+                .WithName(Name)
+                .WithValidation<RsvpEventRequest>();
         return app;
     }
 }
