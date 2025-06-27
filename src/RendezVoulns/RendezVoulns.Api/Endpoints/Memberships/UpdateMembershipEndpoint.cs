@@ -1,4 +1,5 @@
 using RendezVoulns.Api.Mapping;
+using RendezVoulns.Api.Validation;
 using RendezVoulns.Application.Services.Interfaces;
 using RendezVoulns.Contracts.V1.Membership.Requests;
 
@@ -23,9 +24,10 @@ public static class UpdateMembershipEndpoint
 
                     return result.Match(
                         onSuccess: updatedMembership => TypedResults.Ok(updatedMembership.MapToResponse()),
-                        onFailure: error => error.ToProblem());      
+                        onFailure: error => error.ToProblem());
                 })
-                .WithName(Name);
+                .WithName(Name)
+                .WithValidation<UpdateMembershipRequest>();
         return app;
     }
 }
