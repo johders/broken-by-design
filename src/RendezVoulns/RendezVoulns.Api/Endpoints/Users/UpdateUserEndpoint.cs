@@ -1,4 +1,5 @@
 using RendezVoulns.Api.Mapping;
+using RendezVoulns.Api.Validation;
 using RendezVoulns.Application.Services.Interfaces;
 using RendezVoulns.Contracts.V1.User.Requests;
 
@@ -23,9 +24,10 @@ public static class UpdateUserEndpoint
 
                     return result.Match(
                         onSuccess: updatedUser => TypedResults.Ok(updatedUser.MapToResponse()),
-                        onFailure: error => error.ToProblem());  
+                        onFailure: error => error.ToProblem());
                 })
-                .WithName(Name);
+                .WithName(Name)
+                .WithValidation<UpdateUserRequest>();
         return app;
     }
 }

@@ -1,4 +1,5 @@
 using RendezVoulns.Api.Mapping;
+using RendezVoulns.Api.Validation;
 using RendezVoulns.Application.Services.Interfaces;
 using RendezVoulns.Contracts.V1.User.Requests;
 
@@ -20,7 +21,8 @@ public static class CreateUseEndpoint
                         onSuccess: () => TypedResults.CreatedAtRoute(user.MapToResponse(), GetUserEndpoint.Name, new { idOrSlug = user.Slug }),
                         onFailure: error => error.ToProblem());
                 })
-                .WithName(Name);
+                .WithName(Name)
+                .WithValidation<CreateUserRequest>();
         return app;
     }
 }
