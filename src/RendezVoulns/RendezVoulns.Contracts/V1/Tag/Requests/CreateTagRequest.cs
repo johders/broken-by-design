@@ -1,6 +1,6 @@
 namespace RendezVoulns.Contracts.V1.Tag.Requests;
 
-public class CreateTagRequest
+public class CreateTagRequest : ITagRequest
 {
     public required string Name { get; init; }
     public required string ColorHex { get; init; }

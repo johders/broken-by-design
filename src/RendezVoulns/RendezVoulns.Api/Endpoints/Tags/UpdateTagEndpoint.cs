@@ -1,4 +1,5 @@
 using RendezVoulns.Api.Mapping;
+using RendezVoulns.Api.Validation;
 using RendezVoulns.Application.Services.Interfaces;
 using RendezVoulns.Contracts.V1.Tag.Requests;
 
@@ -23,9 +24,10 @@ public static class UpdateTagEndpoint
 
                     return result.Match(
                         onSuccess: updatedTag => TypedResults.Ok(updatedTag.MapToResponse()),
-                        onFailure: error => error.ToProblem());      
+                        onFailure: error => error.ToProblem());
                 })
-                .WithName(Name);
+                .WithName(Name)
+                .WithValidation<UpdateTagRequest>();
         return app;
     }
 }

@@ -1,4 +1,5 @@
 using RendezVoulns.Api.Mapping;
+using RendezVoulns.Api.Validation;
 using RendezVoulns.Application.Services.Interfaces;
 using RendezVoulns.Contracts.V1.Tag.Requests;
 
@@ -20,7 +21,8 @@ public static class CreateTagEndpoint
                         onSuccess: () => TypedResults.CreatedAtRoute(tag.MapToResponse(), GetTagEndpoint.Name, new { tag.Id }),
                         onFailure: error => error.ToProblem());
                 })
-                .WithName(Name);
+                .WithName(Name)
+                .WithValidation<CreateTagRequest>();
         return app;
     }
 }
