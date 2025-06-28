@@ -1,9 +1,9 @@
-PUT http://localhost:5006/api/events/d0f63d46-480c-4a22-8989-55e1b2c4d6f2
+PUT http://localhost:5006/api/events/b75248d8-3ebb-4e99-8c71-18f9a47de4fc
 Content-Type: application/json
 
 {
     "groupId": "00000000-0000-0000-0000-000000000105",
-    "title": "Cybersecurity Meetup: Staying Safe Online",
+    "title": "Cybersecurity Meetup: Staying Safe Online. Or not",
     "description": "An conference with snacks and talks about latest trends in technology and software development.",
     "location": "Malaga, Spain",
     "startTime": "2026-08-19T07:00:00Z",

@@ -217,8 +217,39 @@ public class AppEventRepository(IDbConnectionFactory dbConnectionFactory) : IApp
         return result > 0;
     }
 
-    public Task<bool> ExistsByIdAsync(Guid id)
+    public async Task<bool> ExistsByIdAsync(Guid id, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+
+        var sql = """
+                SELECT 1 
+                FROM events
+                WHERE id = @Id
+                AND deleted_on IS NULL
+                LIMIT 1;
+                """;
+
+        var result = await connection.QueryFirstOrDefaultAsync<int?>(new CommandDefinition(sql, new { Id = id }, cancellationToken: token));
+
+        return result.HasValue;
+    }
+
+    public async Task<bool> TitleExistsInGroupAsync(string title, Guid groupId, Guid? excludeId, CancellationToken token = default)
+    {
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+
+        var sql = """
+                SELECT 1 
+                FROM events
+                WHERE title = @Title
+                AND group_id = @GroupId
+                AND deleted_on IS NULL
+                AND (@ExcludeId IS NULL OR id != @ExcludeId)
+                LIMIT 1;
+                """;
+
+        var result = await connection.QueryFirstOrDefaultAsync<int?>(new CommandDefinition(sql, new { Title = title, GroupId = groupId, ExcludeId = excludeId }, cancellationToken: token));
+
+        return result.HasValue;
     }
 }

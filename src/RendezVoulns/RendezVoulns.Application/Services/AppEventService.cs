@@ -14,6 +14,13 @@ public class AppEventService(IAppEventRepository appEventRepository, ILogger<App
 
     public async Task<Result> CreateAsync(AppEvent appEvent, CancellationToken token = default)
     {
+        var titleExists = await _appEventRepository.TitleExistsInGroupAsync(appEvent.Title, appEvent.GroupId, token:token);
+
+        if (titleExists)
+        {
+            return Result.Failure(Errors.AppEvents.DuplicateTitleInGroupError);
+        }
+
         try
         {
             var created = await _appEventRepository.CreateAsync(appEvent, token);
@@ -32,21 +39,21 @@ public class AppEventService(IAppEventRepository appEventRepository, ILogger<App
         }
     }
 
-    public async Task<Result<AppEvent?>> GetByIdAsync(Guid id, CancellationToken token = default)
+    public async Task<Result<AppEvent>> GetByIdAsync(Guid id, CancellationToken token = default)
     {
         var appEvent = await _appEventRepository.GetByIdAsync(id, token);
         return appEvent is not null
-            ? Result<AppEvent?>.Success(appEvent) 
-            : Result<AppEvent?>.Failure(Errors.AppEvents.NotFoundError);
+            ? Result<AppEvent>.Success(appEvent) 
+            : Result<AppEvent>.Failure(Errors.AppEvents.NotFoundError);
     }
 
-    public async Task<Result<AppEvent?>> GetBySlugAsync(string slug, CancellationToken token = default)
+    public async Task<Result<AppEvent>> GetBySlugAsync(string slug, CancellationToken token = default)
     {
         var appEvent = await _appEventRepository.GetBySlugAsync(slug, token);
 
         return appEvent is not null
-            ? Result<AppEvent?>.Success(appEvent)
-            : Result<AppEvent?>.Failure(Errors.AppEvents.NotFoundError);
+            ? Result<AppEvent>.Success(appEvent)
+            : Result<AppEvent>.Failure(Errors.AppEvents.NotFoundError);
     }
 
     public async Task<Result<IEnumerable<AppEvent>>> GetAllAsync(CancellationToken token = default)
@@ -57,6 +64,16 @@ public class AppEventService(IAppEventRepository appEventRepository, ILogger<App
 
     public async Task<Result<AppEvent>> UpdateAsync(AppEvent appEvent, CancellationToken token = default)
     {
+        var eventExists = await _appEventRepository.ExistsByIdAsync(appEvent.Id, token);
+
+        if (!eventExists)
+            return Result<AppEvent>.Failure(Errors.AppEvents.NotFoundError);
+
+        var titleExists = await _appEventRepository.TitleExistsInGroupAsync(appEvent.Title, appEvent.GroupId, appEvent.Id, token);
+
+        if (titleExists)
+            return Result<AppEvent>.Failure(Errors.AppEvents.DuplicateTitleInGroupError);
+
         try
         {
             var updated = await _appEventRepository.UpdateAsync(appEvent, token);
@@ -74,17 +91,18 @@ public class AppEventService(IAppEventRepository appEventRepository, ILogger<App
             return Result<AppEvent>.Failure(new Error(ex.Code, ex.Message));
         }
     }
+
     public async Task<Result> SoftDeleteAsync(Guid id, DateTimeOffset deletedOn, CancellationToken token = default)
     {
+        var eventExists = await _appEventRepository.ExistsByIdAsync(id, token);
+
+        if (!eventExists)
+            return Result.Failure(Errors.AppEvents.NotFoundError);
+
         var deleted = await _appEventRepository.SoftDeleteAsync(id, deletedOn, token);
 
         return deleted
             ? Result.Success()
             : Result.Failure(Errors.AppEvents.DeleteFailedError);
-    }
-
-    public Task<Result> ExistsByIdAsync(Guid id)
-    {
-        throw new NotImplementedException();
     }
 }

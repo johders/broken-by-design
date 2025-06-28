@@ -22,6 +22,7 @@ public static class Errors
         private const string Domain = nameof(AppEvent);
         public const string DuplicateErrorCode = $"{Domain}.{Duplicate}";
         public const string DuplicateSlugErrorCode = $"{Domain}.{Duplicate}{Slug}";
+        public const string DuplicateTitleErrorCode = $"{Domain}.{Duplicate}{Title}";
         public const string InvalidReferenceErrorCode = $"{Domain}.{Invalid}Reference";
         public const string InvalidGroupErrorCode = $"{Domain}.{Invalid}{nameof(Group)}";
         public const string InvalidUserErrorCode = $"{Domain}.{Invalid}{nameof(User)}";
@@ -31,6 +32,7 @@ public static class Errors
         public const string NotFoundErrorCode = $"{Domain}.{NotFound}";
         public static readonly Error NotFoundError = new(NotFoundErrorCode, "Event not found.");
         public static readonly Error CreateFailedError = new(CreateFailedErrorCode, "The event could not be created.");
+        public static readonly Error DuplicateTitleInGroupError = new(DuplicateTitleErrorCode, "An event with this title already exists for this group.");
         public static readonly Error UpdateFailedError = new(UpdateFailedErrorCode, "The event could not be updated.");
         public static readonly Error DeleteFailedError = new(DeleteFailedErrorCode, "The event could not be deleted.");
     }
