@@ -101,8 +101,38 @@ public class GroupRepository(IDbConnectionFactory dbConnectionFactory) : IGroupR
     }
 
 
-    public Task<bool> ExistsByIdAsync(Guid id)
+    public async Task<bool> ExistsByIdAsync(Guid id, CancellationToken token)
     {
-        throw new NotImplementedException();
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+
+        var sql = """
+            SELECT 1 
+            FROM groups
+            WHERE id = @Id
+            AND deleted_on IS NULL
+            LIMIT 1;
+            """;
+
+        var result = await connection.QueryFirstOrDefaultAsync<int?>(new CommandDefinition(sql, new { Id = id }, cancellationToken: token));
+
+        return result.HasValue;
+    }
+
+    public async Task<bool> NameExistsAsync(string name, Guid? excludeId = null, CancellationToken token = default)
+    {
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+
+        var sql = """
+            SELECT 1 
+            FROM groups
+            WHERE name = @Name
+            AND (@ExcludeId IS NULL OR id != @ExcludeId)
+            AND deleted_on IS NULL
+            LIMIT 1;
+            """;
+
+        var result = await connection.QueryFirstOrDefaultAsync<int?>(new CommandDefinition(sql, new { Name = name, ExcludeId = excludeId }, cancellationToken: token));
+
+        return result.HasValue;
     }
 }

@@ -9,5 +9,7 @@ public interface IGroupRepository
     Task<IEnumerable<Group>> GetAllAsync(CancellationToken token = default);
     Task<bool> UpdateAsync(Group group, CancellationToken token = default);
     Task<bool> SoftDeleteAsync(Guid id, DateTimeOffset deletedOn, CancellationToken token = default);
-    Task<bool> ExistsByIdAsync(Guid id);
+    Task<bool> ExistsByIdAsync(Guid id, CancellationToken token = default);
+    Task<bool> NameExistsAsync(string name, Guid? excludeId = null, CancellationToken token = default);
+
 }

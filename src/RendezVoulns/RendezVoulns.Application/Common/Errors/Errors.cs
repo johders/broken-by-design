@@ -46,6 +46,7 @@ public static class Errors
         public const string DeleteFailedErrorCode = $"{Domain}.{DeleteFailed}";
         public const string NotFoundErrorCode = $"{Domain}.{NotFound}";
         public static readonly Error NotFoundError = new(NotFoundErrorCode, "Group not found.");
+        public static readonly Error DuplicateNameError = new(DuplicateNameErrorCode, "A group with this name already exists.");
         public static readonly Error CreateFailedError = new(CreateFailedErrorCode, "The group could not be created.");
         public static readonly Error UpdateFailedError = new(UpdateFailedErrorCode, "The group could not be updated.");
         public static readonly Error DeleteFailedError = new(DeleteFailedErrorCode, "The group could not be deleted.");

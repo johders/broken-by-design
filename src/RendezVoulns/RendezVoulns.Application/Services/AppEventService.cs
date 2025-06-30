@@ -14,7 +14,7 @@ public class AppEventService(IAppEventRepository appEventRepository, ILogger<App
 
     public async Task<Result> CreateAsync(AppEvent appEvent, CancellationToken token = default)
     {
-        var titleExists = await _appEventRepository.TitleExistsInGroupAsync(appEvent.Title, appEvent.GroupId, token:token);
+        var titleExists = await _appEventRepository.TitleExistsInGroupAsync(appEvent.Title, appEvent.GroupId, token: token);
 
         if (titleExists)
         {

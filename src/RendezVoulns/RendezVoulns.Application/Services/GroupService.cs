@@ -12,6 +12,10 @@ public class GroupService(IGroupRepository groupRepository) : IGroupService
     private readonly IGroupRepository _groupRepository = groupRepository;
     public async Task<Result> CreateAsync(Group group, CancellationToken token = default)
     {
+        var nameExists = await _groupRepository.NameExistsAsync(group.Name, token: token);
+        if (nameExists)
+            return Result.Failure(Errors.Groups.DuplicateNameError);
+
         try
         {
             var created = await _groupRepository.CreateAsync(group, token);
@@ -42,6 +46,14 @@ public class GroupService(IGroupRepository groupRepository) : IGroupService
 
     public async Task<Result<Group>> UpdateAsync(Group group, CancellationToken token = default)
     {
+        var nameExists = await _groupRepository.NameExistsAsync(group.Name, group.Id, token);
+        if (nameExists)
+            return Result<Group>.Failure(Errors.Groups.DuplicateNameError);
+
+        var groupExists = await _groupRepository.ExistsByIdAsync(group.Id);
+        if (!groupExists)
+            return Result<Group>.Failure(Errors.Groups.NotFoundError);
+
         try
         {
             var updated = await _groupRepository.UpdateAsync(group, token);
@@ -58,15 +70,14 @@ public class GroupService(IGroupRepository groupRepository) : IGroupService
 
     public async Task<Result> SoftDeleteAsync(Guid id, DateTimeOffset deletedOn, CancellationToken token = default)
     {
+        var groupExists = await _groupRepository.ExistsByIdAsync(id);
+        if (!groupExists)
+            return Result.Failure(Errors.Groups.NotFoundError);
+
         var deleted = await _groupRepository.SoftDeleteAsync(id, deletedOn, token);
 
         return deleted
             ? Result.Success()
             : Result.Failure(Errors.Groups.DeleteFailedError);
-    }
-
-    public Task<Result> ExistsByIdAsync(Guid id)
-    {
-        throw new NotImplementedException();
     }
 }
