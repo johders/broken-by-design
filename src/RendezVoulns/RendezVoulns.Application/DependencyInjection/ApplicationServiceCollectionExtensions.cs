@@ -11,19 +11,19 @@ public static class ApplicationServiceCollectionExtensions
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        services.AddSingleton<IAppEventRepository, AppEventRepository>();
-        services.AddSingleton<ITagRepository, TagRepository>();
-        services.AddSingleton<IGroupRepository, GroupRepository>();
-        services.AddSingleton<IUserRepository, UserRepository>();
-        services.AddSingleton<IRsvpRepository, RsvpRepository>();
-        services.AddSingleton<IMembershipRepository, MembershipRepository>();
+        services.AddScoped<IAppEventRepository, AppEventRepository>();
+        services.AddScoped<ITagRepository, TagRepository>();
+        services.AddScoped<IGroupRepository, GroupRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IRsvpRepository, RsvpRepository>();
+        services.AddScoped<IMembershipRepository, MembershipRepository>();
 
-        services.AddSingleton<IAppEventService, AppEventService>();
-        services.AddSingleton<ITagService, TagService>();
-        services.AddSingleton<IGroupService, GroupService>();
-        services.AddSingleton<IUserService, UserService>();
-        services.AddSingleton<IRsvpService, RsvpService>();
-        services.AddSingleton<IMembershipService, MembershipService>();
+        services.AddScoped<IAppEventService, AppEventService>();
+        services.AddScoped<ITagService, TagService>();
+        services.AddScoped<IGroupService, GroupService>();
+        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IRsvpService, RsvpService>();
+        services.AddScoped<IMembershipService, MembershipService>();
         return services;
     }
 
