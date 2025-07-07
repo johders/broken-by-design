@@ -62,6 +62,7 @@ public static class Errors
         public const string DeleteFailedErrorCode = $"{Domain}.{DeleteFailed}";
         public const string NotFoundErrorCode = $"{Domain}.{NotFound}";
         public static readonly Error NotFoundError = new(NotFoundErrorCode, "Tag not found.");
+        public static readonly Error DuplicateNameError = new(DuplicateNameErrorCode, "A tag with this name already exists.");
         public static readonly Error CreateFailedError = new(CreateFailedErrorCode, "The tag could not be created.");
         public static readonly Error TagEventFailedError = new(TagEventFailedErrorCode, "The tag could not be added to the event.");
         public static readonly Error UpdateFailedError = new(UpdateFailedErrorCode, "The tag could not be updated.");

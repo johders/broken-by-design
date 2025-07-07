@@ -251,19 +251,19 @@ public static class ContractMapping
     }
 
     public static MembershipWithGroupResponse MapToResponse(this MembershipWithGroup membership)
-{
-    return new MembershipWithGroupResponse
     {
-        Group = new GroupSummaryResponse
+        return new MembershipWithGroupResponse
         {
-            Id = membership.Group.Id,
-            Name = membership.Group.Name,
-            Description = membership.Group.Description
-        },
-        Role = membership.Role,
-        JoinedOn = membership.JoinedOn
-    };
-}
+            Group = new GroupSummaryResponse
+            {
+                Id = membership.Group.Id,
+                Name = membership.Group.Name,
+                Description = membership.Group.Description
+            },
+            Role = membership.Role,
+            JoinedOn = membership.JoinedOn
+        };
+    }
 
 
     public static MembershipsWithGroupResponse MapToResponse(this IEnumerable<MembershipWithGroup> memberships)

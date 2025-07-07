@@ -133,4 +133,39 @@ public class TagRepository(IDbConnectionFactory dbConnectionFactory) : ITagRepos
         transaction.Commit();
         return result > 0;
     }
+
+    public async Task<bool> ExistsByIdAsync(Guid id, CancellationToken token = default)
+    {
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+
+        var sql = """
+            SELECT 1
+            FROM tags
+            WHERE id = @Id
+            AND deleted_on IS NULL
+            LIMIT 1;
+            """;
+
+        var result = await connection.QueryFirstOrDefaultAsync<int?>(new CommandDefinition(sql, new { Id = id }, cancellationToken: token));
+
+        return result.HasValue;
+    }
+
+    public async Task<bool> NameExistsAsync(string name, Guid? excludeId = null, CancellationToken token = default)
+    {
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+
+        var sql = """
+            SELECT 1
+            FROM tags
+            WHERE name = @Name
+            AND (@ExcludeId IS NULL OR id != @ExcludeId)
+            AND deleted_on IS NULL
+            LIMIT 1;
+            """;
+
+        var result = await connection.QueryFirstOrDefaultAsync<int?>(new CommandDefinition(sql, new { Name = name, ExcludeId = excludeId }, cancellationToken: token));
+
+        return result.HasValue;
+    }
 }

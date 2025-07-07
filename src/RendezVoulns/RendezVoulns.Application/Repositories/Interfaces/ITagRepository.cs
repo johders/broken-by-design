@@ -11,5 +11,7 @@ public interface ITagRepository
     Task<bool> SoftDeleteAsync(Guid id, DateTimeOffset deletedOn, CancellationToken token = default);
     Task<bool> DeleteFromEventAsync(Guid eventId, Guid tagId, CancellationToken token = default);
     Task<bool> TagEventAsync(Guid eventId, Guid tagId, CancellationToken token = default);
+    Task<bool> ExistsByIdAsync(Guid id, CancellationToken token = default);
+    Task<bool> NameExistsAsync(string name, Guid? excludeId = null, CancellationToken token = default);
 
 }

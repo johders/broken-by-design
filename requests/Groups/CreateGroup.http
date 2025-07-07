@@ -2,6 +2,6 @@ POST http://localhost:5006/api/groups
 Content-Type: application/json
 
 {
-    "name": "Fun without sadness",
-    "description": "We're sad and have fun with it"
+    "name": "Fun stuff on fun days",
+    "description": "We're have fun with it"
 }
