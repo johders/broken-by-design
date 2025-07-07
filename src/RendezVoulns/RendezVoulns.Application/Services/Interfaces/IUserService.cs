@@ -11,5 +11,4 @@ public interface IUserService
     Task<Result<IEnumerable<User>>> GetAllAsync(CancellationToken token = default);
     Task<Result<User>> UpdateAsync(User user, CancellationToken token = default);
     Task<Result> SoftDeleteAsync(Guid id, DateTimeOffset deletedOn, CancellationToken token = default);
-    Task<Result> ExistsByIdAsync(Guid id);
 }

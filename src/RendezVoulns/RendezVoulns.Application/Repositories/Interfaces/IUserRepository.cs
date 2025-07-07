@@ -10,5 +10,8 @@ public interface IUserRepository
     Task<IEnumerable<User>> GetAllAsync(CancellationToken token = default);
     Task<bool> UpdateAsync(User user, CancellationToken token = default);
     Task<bool> SoftDeleteAsync(Guid id, DateTimeOffset deletedOn, CancellationToken token = default);
-    Task<bool> ExistsByIdAsync(Guid id);
+    Task<bool> ExistsByIdAsync(Guid id, CancellationToken token = default);
+    Task<bool> UsernameExistsAsync(string username, Guid? excludeId = null, CancellationToken token = default);
+    Task<bool> EmailExistsAsync(string email, Guid? excludeId = null, CancellationToken token = default);
+    Task<bool> SlugExistsAsync(string slug, Guid? excludeId = null, CancellationToken token = default);
 }

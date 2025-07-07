@@ -81,6 +81,9 @@ public static class Errors
         public const string DeleteFailedErrorCode = $"{Domain}.{DeleteFailed}";
         public const string NotFoundErrorCode = $"{Domain}.{NotFound}";
         public static readonly Error NotFoundError = new(NotFoundErrorCode, "User not found.");
+        public static readonly Error DuplicateUsernameError = new(DuplicateUsernameErrorCode, "This username is already taken.");
+        public static readonly Error DuplicateEmailError = new(DuplicateEmailErrorCode, "A user with this email address already exists.");
+        public static readonly Error DuplicateSlugError = new(DuplicateSlugErrorCode, "A user with this slug already exists.");
         public static readonly Error CreateFailedError = new(CreateFailedErrorCode, "The user could not be created.");
         public static readonly Error UpdateFailedError = new(UpdateFailedErrorCode, "The user could not be updated.");
         public static readonly Error DeleteFailedError = new(DeleteFailedErrorCode, "The user could not be deleted.");

@@ -13,6 +13,18 @@ public class UserService(IUserRepository userRepository) : IUserService
 
     public async Task<Result> CreateAsync(User user, CancellationToken token = default)
     {
+        var usernameExists = await _userRepository.UsernameExistsAsync(user.Username, token: token);
+        if (usernameExists)
+            return Result.Failure(Errors.Users.DuplicateUsernameError);
+
+        var emailExists = await _userRepository.EmailExistsAsync(user.Email, token: token);
+        if (emailExists)
+            return Result.Failure(Errors.Users.DuplicateEmailError);
+
+        var slugExists = await _userRepository.SlugExistsAsync(user.Slug, token: token);
+        if (slugExists)
+            return Result.Failure(Errors.Users.DuplicateSlugError);
+
         try
         {
             var created = await _userRepository.CreateAsync(user, token);
@@ -56,6 +68,22 @@ public class UserService(IUserRepository userRepository) : IUserService
 
     public async Task<Result<User>> UpdateAsync(User user, CancellationToken token = default)
     {
+        var userExists = await _userRepository.ExistsByIdAsync(user.Id, token);
+        if (!userExists)
+            return Result<User>.Failure(Errors.Users.NotFoundError);
+
+        var usernameExists = await _userRepository.UsernameExistsAsync(user.Username, user.Id, token: token);
+        if (usernameExists)
+            return Result<User>.Failure(Errors.Users.DuplicateUsernameError);
+
+        var emailExists = await _userRepository.EmailExistsAsync(user.Email, user.Id, token: token);
+        if (emailExists)
+            return Result<User>.Failure(Errors.Users.DuplicateEmailError);
+
+        var slugExists = await _userRepository.SlugExistsAsync(user.Slug, user.Id, token: token);
+        if (slugExists)
+            return Result<User>.Failure(Errors.Users.DuplicateSlugError);
+
         try
         {
             var updated = await _userRepository.UpdateAsync(user, token);
@@ -76,15 +104,13 @@ public class UserService(IUserRepository userRepository) : IUserService
 
     public async Task<Result> SoftDeleteAsync(Guid id, DateTimeOffset deletedOn, CancellationToken token = default)
     {
+        var userExists = await _userRepository.ExistsByIdAsync(id, token);
+        if (!userExists)
+            return Result<User>.Failure(Errors.Users.NotFoundError);
         var deleted = await _userRepository.SoftDeleteAsync(id, deletedOn, token);
 
         return deleted
             ? Result.Success()
             : Result.Failure(Errors.Users.DeleteFailedError);
-    }
-
-    public Task<Result> ExistsByIdAsync(Guid id)
-    {
-        throw new NotImplementedException();
     }
 }

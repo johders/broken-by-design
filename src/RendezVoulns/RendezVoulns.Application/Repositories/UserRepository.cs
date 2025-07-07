@@ -128,9 +128,75 @@ public class UserRepository(IDbConnectionFactory dbConnectionFactory) : IUserRep
         transaction.Commit();
         return result > 0;
     }
-    
-    public Task<bool> ExistsByIdAsync(Guid id)
+
+    public async Task<bool> ExistsByIdAsync(Guid id, CancellationToken token = default)
     {
-        throw new NotImplementedException();
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+
+        var sql = """
+            SELECT 1 
+            FROM users
+            WHERE id = @Id
+            AND deleted_on IS NULL
+            LIMIT 1;
+            """;
+
+        var result = await connection.QueryFirstOrDefaultAsync<int?>(new CommandDefinition(sql, new { Id = id }, cancellationToken: token));
+
+        return result.HasValue;
+    }
+
+    public async Task<bool> UsernameExistsAsync(string username, Guid? excludeId = null, CancellationToken token = default)
+    {
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+
+        var sql = """
+            SELECT 1 
+            FROM users
+            WHERE username = @Username
+            AND (@ExcludeId IS NULL OR id != @ExcludeId)
+            AND deleted_on IS NULL
+            LIMIT 1;
+            """;
+
+        var result = await connection.QueryFirstOrDefaultAsync<int?>(new CommandDefinition(sql, new { Username = username, ExcludeId = excludeId }, cancellationToken: token));
+
+        return result.HasValue;
+    }
+
+    public async Task<bool> EmailExistsAsync(string email, Guid? excludeId = null, CancellationToken token = default)
+    {
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+
+        var sql = """
+            SELECT 1 
+            FROM users
+            WHERE email = @Email
+            AND (@ExcludeId IS NULL OR id != @ExcludeId)
+            AND deleted_on IS NULL
+            LIMIT 1;
+            """;
+
+        var result = await connection.QueryFirstOrDefaultAsync<int?>(new CommandDefinition(sql, new { Email = email, ExcludeId = excludeId }, cancellationToken: token));
+
+        return result.HasValue;
+    }
+
+    public async Task<bool> SlugExistsAsync(string slug, Guid? excludeId = null, CancellationToken token = default)
+    {
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+
+        var sql = """
+            SELECT 1 
+            FROM users
+            WHERE slug = @Slug
+            AND (@ExcludeId IS NULL OR id != @ExcludeId)
+            AND deleted_on IS NULL
+            LIMIT 1;
+            """;
+
+        var result = await connection.QueryFirstOrDefaultAsync<int?>(new CommandDefinition(sql, new { Slug = slug, ExcludeId = excludeId }, cancellationToken: token));
+
+        return result.HasValue;
     }
 }
